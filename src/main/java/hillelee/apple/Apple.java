@@ -9,4 +9,7 @@ import lombok.Data;
 public class Apple implements Fruit {
     private String color;
     private Integer weight;
+
+    public Apple() {
+    }
 }

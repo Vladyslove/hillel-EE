@@ -19,4 +19,18 @@ public class ProblemSolverTest {
 
         Assert.assertThat(result, Matchers.is("Correct answer"));
     }
+
+    @Test
+    public void solvePuzzle2() throws Exception {
+        String result = new ProblemSolver().solve2(new Puzzle());
+
+        Assert.assertThat(result, Matchers.is("Correct answer"));
+    }
+
+    @Test
+    public void solveDecryption2() throws Exception {
+        String result = new ProblemSolver().solve2(new MessageDecryptor());
+
+        Assert.assertThat(result, Matchers.is("Correct answer"));
+    }
 }
