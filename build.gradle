@@ -6,6 +6,9 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:22.0'
+    // https://mvnrepository.com/artifact/org.springframework/spring-core
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.12.RELEASE'
+
 
     compileOnly "org.projectlombok:lombok:1.16.16"
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
