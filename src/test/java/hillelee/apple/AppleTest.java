@@ -5,7 +5,7 @@ import org.junit.Test;
 public class AppleTest {
     @Test
     public void getterTest() {
-        new Apple().getColor();
+        new Apple("GREEN", 10).getColor();
     }
 
 }
