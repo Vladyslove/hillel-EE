@@ -15,6 +15,9 @@ public class Dish {
     Boolean isBio;
     DishType type;
 
+    public void setType(DishType type) {
+        this.type = type;
+    }
 
     enum DishType{
             BEEF,
@@ -24,4 +27,8 @@ public class Dish {
     class Restaurant {
         List<Dish> menu;
     }
+
+    public static void main(String[] args) {
+    }
+
 }
