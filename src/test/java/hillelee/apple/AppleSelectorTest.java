@@ -17,6 +17,22 @@ import static org.junit.Assert.*;
 public class AppleSelectorTest {
     private List<Apple> apples;
 
+    public static void printValues(Map<Integer, Apple> map) {
+        for (Map.Entry<Integer, Apple> pair : map.entrySet()) {
+            Apple value = pair.getValue();
+            Integer key = pair.getKey();
+            System.out.println("key is: " + key + ". value is: " + value);
+        }
+    }
+
+    public static void printValuesForStringListApple(Map<String, List<Apple>> map) {
+        for (Map.Entry<String,List<Apple>> pair : map.entrySet()) {
+            List<Apple> value = pair.getValue();
+            String key = pair.getKey();
+            System.out.println("key is: " + key + ". value is: " + value);
+        }
+    }
+
     @Before
     public void setUp() {
         apples = ImmutableList.of(new Apple("RED", 100),
@@ -29,14 +45,8 @@ public class AppleSelectorTest {
 
     @Test
     public void selectHeaviest() throws Exception {
-       /* List<Apple> apples = ImmutableList.of(new Apple("RED", 100),
-                new Apple("RED", 120),
-                new Apple("GREEN", 110),
-                new Apple("GREEN", 130),
-                new Apple("RED", 150),
-                new Apple("RED", 100));*/
 
-        Optional<Apple> maybeHaviest = AppleSelector.getHeaviest(apples);
+         Optional<Apple> maybeHaviest = AppleSelector.getHeaviest(apples);
         if (maybeHaviest.isPresent()) {
             Apple heaviest = maybeHaviest.get();
             assertThat(heaviest.getWeight(), is(150));
@@ -51,7 +61,6 @@ public class AppleSelectorTest {
         Optional<Apple> maybeApple = AppleSelector.getHeaviest(apples);
         if (maybeApple.isPresent()) {
             fail();
-
         }
     }
 
@@ -155,7 +164,6 @@ public class AppleSelectorTest {
 
         assertThat(colors, hasSize(6));
         assertSame(colors.get(0), "RED");
-
         for (String color : colors) {
             System.out.println(color);
         }
@@ -182,7 +190,7 @@ public class AppleSelectorTest {
         BiFunction<ColorAdjuster, String, String > adjustWithAdjuster = ColorAdjuster::adjust;*/
 
         apples.stream()
-                .map(Apple::getColor)
+                .map(apple -> apple.getColor())
                 .map(colorAdjuster::adjust)
                 .forEach(System.out::println);
     }
@@ -208,28 +216,34 @@ public class AppleSelectorTest {
 
     @Test
     public void intStream() throws Exception {
-        IntSummaryStatistics sum = apples.stream()
+        OptionalDouble sum = apples.stream()
 //                .mapToInt(Apple::getWeight)
                 // the same 1 line above and 2 below
                 .map(Apple::getWeight)
                 .mapToInt(Integer::intValue)
-                .summaryStatistics();
+                .average();
         System.out.println(sum);
     }
 
     @Test
     public void hashMapWhereKeyIsWeightAndValueIsAppleTest() throws Exception {
         Map<Integer, Apple> weightToApple = apples.stream()
-                .collect(Collectors.toMap(Apple::getWeight, Function.identity()));
+                .collect(Collectors.toMap(Apple::getWeight,
+                        Function.identity()));
 
                 assertThat(weightToApple.get(100), is(apples.get(0)));
-    }
+
+                printValues(weightToApple);
+
+}
 
     @Test
     public void hashMapWhereKeyIsColorAndValueIsListOfWeights() throws Exception {
         Map<String, List<Apple>> collect = apples.stream().
                 collect(Collectors.groupingBy(Apple::getColor, Collectors.toList()));
-        System.out.println(collect.get("RED"));
+//        System.out.println(collect.get("RED"));
+
+        printValuesForStringListApple(collect);
     }
 
     @Test
