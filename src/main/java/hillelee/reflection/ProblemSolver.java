@@ -20,6 +20,7 @@ public class ProblemSolver {
         }
         throw new RuntimeException("There is no CorrectAnswer");
     }
+
     //    @SneakyThrows(RuntimeException.class) // won't work
 //    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
 //    @SneakyThrows(ReflectiveOperationException.class) // first parent of two upper classes

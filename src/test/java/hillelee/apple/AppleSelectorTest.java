@@ -25,6 +25,14 @@ public class AppleSelectorTest {
         }
     }
 
+    public static void printValuesForStringListApple(Map<String, List<Apple>> map) {
+        for (Map.Entry<String,List<Apple>> pair : map.entrySet()) {
+            List<Apple> value = pair.getValue();
+            String key = pair.getKey();
+            System.out.println("key is: " + key + ". value is: " + value);
+        }
+    }
+
     @Before
     public void setUp() {
         apples = ImmutableList.of(new Apple("RED", 100),
@@ -156,7 +164,6 @@ public class AppleSelectorTest {
 
         assertThat(colors, hasSize(6));
         assertSame(colors.get(0), "RED");
-
         for (String color : colors) {
             System.out.println(color);
         }
@@ -209,19 +216,20 @@ public class AppleSelectorTest {
 
     @Test
     public void intStream() throws Exception {
-        IntSummaryStatistics sum = apples.stream()
+        OptionalDouble sum = apples.stream()
 //                .mapToInt(Apple::getWeight)
                 // the same 1 line above and 2 below
                 .map(Apple::getWeight)
                 .mapToInt(Integer::intValue)
-                .summaryStatistics();
+                .average();
         System.out.println(sum);
     }
 
     @Test
     public void hashMapWhereKeyIsWeightAndValueIsAppleTest() throws Exception {
         Map<Integer, Apple> weightToApple = apples.stream()
-                .collect(Collectors.toMap(Apple::getWeight, Function.identity()));
+                .collect(Collectors.toMap(Apple::getWeight,
+                        Function.identity()));
 
                 assertThat(weightToApple.get(100), is(apples.get(0)));
 
@@ -233,7 +241,9 @@ public class AppleSelectorTest {
     public void hashMapWhereKeyIsColorAndValueIsListOfWeights() throws Exception {
         Map<String, List<Apple>> collect = apples.stream().
                 collect(Collectors.groupingBy(Apple::getColor, Collectors.toList()));
-        System.out.println(collect.get("RED"));
+//        System.out.println(collect.get("RED"));
+
+        printValuesForStringListApple(collect);
     }
 
     @Test

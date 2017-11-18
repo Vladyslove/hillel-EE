@@ -24,11 +24,11 @@ public class Dish {
             CHICKEN,
             VEGETABLES
     }
-    class Restaurant {
-        List<Dish> menu;
-    }
+}
 
-    public static void main(String[] args) {
-    }
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class Restaurant {
+    List<Dish> menu;
 }
