@@ -2,6 +2,7 @@ package hillelee.reflection;
 
 import lombok.SneakyThrows;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
@@ -25,7 +26,7 @@ public class ProblemSolver {
 //    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
 //    @SneakyThrows(ReflectiveOperationException.class) // first parent of two upper classes
     @SneakyThrows
-    public String solve2(Object problem) /*throws InvocationTargetException, IllegalAccessException*/ {
+    public String solve2(Object problem) throws InvocationTargetException, IllegalAccessException {
         Class<?> aClass = problem.getClass();
         Method[] methods = aClass.getMethods();
         for (Method method : methods) {

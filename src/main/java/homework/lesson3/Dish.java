@@ -5,6 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Created by dmitriy.chebotarev@hpe.com on 11/17/2017.
+ *
+ 1. Вывести названия блюд:
+ - только низкокаллорийных
+ - топ-3 самых питательных
+ - всех, но отсортированных сначала по БИО, потом по алфавиту
+ 2. Посчитать среднюю калорийность по группам: говядина, курица, овощи (Map<DishType, Double>)
+ 3. Сгрупировать в Map<DishType, List<String>> БИО блюда
+ 4. Класс hillelee.reflection.ProblemSolver переделать на использование Stram API
+ */
 
 @Data
 @AllArgsConstructor
@@ -20,9 +33,9 @@ public class Dish {
     }
 
     enum DishType{
-            BEEF,
-            CHICKEN,
-            VEGETABLES
+        BEEF,
+        CHICKEN,
+        VEGETABLES
     }
 }
 
@@ -30,5 +43,22 @@ public class Dish {
 @AllArgsConstructor
 @NoArgsConstructor
 class Restaurant {
-    List<Dish> menu;
+    private List<Dish> menu;
+
+    // 1a
+    public List<Dish> mostLowCaloriesDishes() {
+        return menu.stream()
+                .filter(dish -> dish.getCalories() < 850)
+//                .map(Dish::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> mostLowCaloriesDishesIfNeeDJustNames() {
+        return menu.stream()
+                .filter(dish -> dish.getCalories() < 850)
+                .map(Dish::getName)
+                .collect(Collectors.toList());
+    }
 }
+
+

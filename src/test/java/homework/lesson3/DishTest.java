@@ -17,6 +17,18 @@ import static org.junit.Assert.assertThat;
 public class DishTest {
     private List<Dish> dishes;
 
+    //for BDD
+    private List<Dish> menu = new ArrayList<Dish>(){{
+        add(new Dish("Chicken's wings", 1200, true, CHICKEN));
+        add(new Dish("Kebab", 1800, false, BEEF));
+        add(new Dish("AChicken's kebab", 1150, false, CHICKEN));
+        add(new Dish("Beefsteak", 1400, false, BEEF));
+        add(new Dish("Vegetables salad", 700, true, VEGETABLES));
+        add(new Dish("Greek salad", 800, true, VEGETABLES));
+    }};
+    private Restaurant restaurant = new Restaurant(menu);
+
+
     public static void printMapValuesIntegerDish(Map<Integer, Dish> map) {
         for (Map.Entry<Integer, Dish> pair : map.entrySet()) {
             Integer key = pair.getKey();
@@ -55,6 +67,13 @@ public class DishTest {
 
     //without Stream 1 part
     //1a-Done
+
+    @Test
+    public void mostLowCaloriesDishes() {
+        List<Dish> list = restaurant.mostLowCaloriesDishes();
+        System.out.println(list);
+        assertThat(list, hasSize(2));
+    }
 
     @Test
     public void mostLowCaloriesDishesTest() throws Exception {
@@ -144,7 +163,7 @@ public class DishTest {
         assertThat(richCaloriesDishes, hasSize(3));*/
     }
 
-    //1c- 
+    //1c-
     @Test
     public void allDishesSortedByBioThenByAlphabet() throws Exception {
 
@@ -169,9 +188,6 @@ public class DishTest {
         }
         sortedByBioAndName.forEach(System.out::println);
     }
-
-
-
 
 
     //with Streams 1part

@@ -22,14 +22,14 @@ public class ProblemSolverTest {
 
     @Test
     public void solvePuzzle2() throws Exception {
-        String result = new ProblemSolver().solve2(new Puzzle());
+        String result = new ProblemSolver().solve(new Puzzle());
 
         Assert.assertThat(result, Matchers.is("Correct answer"));
     }
 
     @Test
     public void solveDecryption2() throws Exception {
-        String result = new ProblemSolver().solve2(new MessageDecryptor());
+        String result = new ProblemSolver().solve(new MessageDecryptor());
 
         Assert.assertThat(result, Matchers.is("Correct answer"));
     }
