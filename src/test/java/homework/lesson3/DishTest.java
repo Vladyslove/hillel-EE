@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static homework.lesson3.Dish.DishType.*;
+import static java.util.stream.Collectors.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
@@ -28,7 +29,6 @@ public class DishTest {
     }};
     private Restaurant restaurant = new Restaurant(menu);
 
-
     public static void printMapValuesIntegerDish(Map<Integer, Dish> map) {
         for (Map.Entry<Integer, Dish> pair : map.entrySet()) {
             Integer key = pair.getKey();
@@ -36,7 +36,6 @@ public class DishTest {
             System.out.println("key is: " + key + ". value is: " + value);
         }
     }
-
     public static void printMapValuesDishTypeListOfDish(Map<Dish.DishType, List<Dish>> map) {
         for (Map.Entry<Dish.DishType, List<Dish>> pair : map.entrySet()) {
             Dish.DishType key = pair.getKey();
@@ -44,7 +43,6 @@ public class DishTest {
             System.out.println("key is: " + key + ". value is: " + value);
         }
     }
-
     public static void printMapValueTypeOfDishListOfByNamesOfDish(Map<Dish.DishType, List<Dish>> map) {
         for (Map.Entry<Dish.DishType, List<Dish>> pair : map.entrySet()) {
             Dish.DishType key = pair.getKey();
@@ -59,7 +57,6 @@ public class DishTest {
             System.out.println("key is: " + key + ". value is: " + value);
         }
     }
-
     public static void printMapKeyTypeOfDishValueListOfString(Map<Dish.DishType, List<String>> map) {
         for (Map.Entry<Dish.DishType, List<String>> pair : map.entrySet()) {
             Dish.DishType key = pair.getKey();
@@ -79,28 +76,9 @@ public class DishTest {
                 new Dish("Greek salad", 800, true, VEGETABLES));
     }
 
-
     //without Stream 1 part
-    //for BDD
-
-    @Test
-    public void mostLowCaloriesDisheBDD() {
-        List<Dish> list = restaurant.mostLowCaloriesDishes();
-        System.out.println(list);
-        assertThat(list, hasSize(2));
-    }
-
-    @Test
-    public void mostLowCaloriesDishesIfNeeDJustNamesBDD() {
-        List<String> list = restaurant.mostLowCaloriesDishesIfNeeDJustNames();
-        System.out.println(list);
-        assertThat(list, hasSize(2));
-    }
-
-
 
     //1a-Done
-
     @Test
     public void mostLowCaloriesDishes() {
         List<Dish> list = restaurant.mostLowCaloriesDishes();
@@ -222,8 +200,22 @@ public class DishTest {
         sortedByBioAndName.forEach(System.out::println);
     }
 
-
     //with Streams 1part
+
+    //for BDD
+    @Test
+    public void mostLowCaloriesDisheBDD() {
+        List<Dish> list = restaurant.mostLowCaloriesDishes();
+        System.out.println(list);
+        assertThat(list, hasSize(2));
+    }
+
+    @Test
+    public void mostLowCaloriesDishesIfNeeDJustNamesBDD() {
+        List<String> list = restaurant.mostLowCaloriesDishesIfNeeDJustNames();
+        System.out.println(list);
+        assertThat(list, hasSize(2));
+    }
     //1a- DONE
     @Test
     public void mostLowCaloriesDishesStreamsTest() throws Exception {
@@ -234,7 +226,7 @@ public class DishTest {
         List<String> lowCaloriesDishes = dishes.stream()
                 .filter(lowCalories)
                 .map(Dish::getName)
-                .collect(Collectors.toList());
+                .collect(toList());
        /* for (String lowCaloriesDish : lowCaloriesDishes) {
             System.out.println(lowCaloriesDish);
         }
@@ -256,7 +248,7 @@ public class DishTest {
                 filter(richCalories::test).
                 map(Dish::getName)
                 .limit(3)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         richCaloriesDishes.forEach(System.out::println);
 
@@ -285,7 +277,7 @@ public class DishTest {
 */
         List<String> sortedByBioAndName = dishes.stream()
                 .map(dish -> dish.getName())
-                .collect(Collectors.toList());
+                .collect(toList());
         sortedByBioAndName.forEach(System.out::println);
     }
 
@@ -297,7 +289,7 @@ public class DishTest {
         List <String> bioDishes = dishes.stream()
                 .filter(bio)
                 .map(Dish::getName)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         bioDishes.sort(Comparator.naturalOrder());
 
@@ -356,22 +348,21 @@ public class DishTest {
     public void averageDishesCaloriesSeparatedByTypesWithMapStreamTest() throws Exception {
 
         Map<Integer, Dish> averageCaloriesOfDishTypes = dishes.stream()
-                .collect(Collectors.toMap(Dish::getCalories, Function.identity()));
+                .collect(toMap(Dish::getCalories, Function.identity()));
         printMapValuesIntegerDish(averageCaloriesOfDishTypes);
 
         Map<Dish.DishType, List<Dish>> groupedByType = dishes.stream()
-                .collect(Collectors.groupingBy(Dish::getType, Collectors.toList()));
+                .collect(groupingBy(Dish::getType, toList()));
         printMapValuesDishTypeListOfDish(groupedByType);
 
     }
-
 
     // 2 - DONE. This part is done it was unexpectedly easy
     @Test
     public void avDishesCaloriesSeparatedByTypesWithMapStreamTest() throws Exception {
         Map<Dish.DishType, Double> dishTypeDoubleMap = dishes.stream()
-                .collect(Collectors.groupingBy(
-                        Dish::getType, Collectors.averagingDouble(Dish::getCalories)));
+                .collect(/*Collectors.*/groupingBy(
+                        Dish::getType, /*Collectors.*/averagingDouble(Dish::getCalories)));
         printMapKeyTypeOfDishValueDouble(dishTypeDoubleMap);
 
     }
@@ -384,13 +375,13 @@ public class DishTest {
 
         Map<Dish.DishType, List<Dish>> groupedByType = dishes.stream()
                 .filter(Dish::getIsBio)
-                .collect(Collectors.groupingBy(Dish::getType, Collectors.toList()));
+                .collect(groupingBy(Dish::getType, toList()));
         printMapValueTypeOfDishListOfByNamesOfDish(groupedByType);
 
         List<String> collect777 = dishes.stream().
                 filter(Dish::getIsBio)
                 .map(Dish::getName)
-                .collect(Collectors.toList());
+                .collect(toList());
         collect777.forEach(System.out::println);
 
     }
@@ -400,8 +391,8 @@ public class DishTest {
     public void mapDishTypeAndListOfStringsBioDishesTest() throws Exception {
         Map<Dish.DishType, List<String>> dishTypeListMap = dishes.stream()
                 .filter(Dish::getIsBio)
-                .collect(Collectors.groupingBy(
-                        Dish::getType, Collectors.mapping(Dish::getName, Collectors.toList())));
+                .collect(groupingBy(
+                        Dish::getType, mapping(Dish::getName, toList())));
 
         printMapKeyTypeOfDishValueListOfString(dishTypeListMap);
 
