@@ -14,6 +14,6 @@ public class PetController {
 
     @GetMapping(value = "/greeting2")
     public String helloWorld2() {
-        return "helloWorld2";
+        return "helloWorld22";
     }
 }
