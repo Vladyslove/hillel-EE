@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Component;
 
 public class  FairyTale {
@@ -31,19 +28,21 @@ class Config {
 
     @Bean
 //    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    Knight knight(@Qualifier("quest") Quest quest) {
+    Knight knight(/*@Qualifier("quest")*/ Quest quest) {
         return new Knight(quest);
     }
 
     @Bean
+    @Primary
     Quest killDragon() {
         return new Quest("Kill th Dragon");
     }
 
-    @Bean
+    @Bean/*@Primary*/
     Quest rescuePrincess() {
         return new Quest("Rescue the Princess");
     }
+
 
     @Bean
     String task() {
@@ -60,7 +59,7 @@ class Knight {
 }
 
 @Data
-@Component
+//@Component
 //@Scope("prototype")
 class Quest {
     private final String task;
