@@ -52,6 +52,21 @@ public class DishTest {
             System.out.println("key is: " + key + ". value is: " + value);
         }
     }
+    public static void printMapKeyTypeOfDishValueDouble(Map<Dish.DishType, Double> map) {
+        for (Map.Entry<Dish.DishType, Double> pair : map.entrySet()) {
+            Dish.DishType key = pair.getKey();
+            Double value = pair.getValue();
+            System.out.println("key is: " + key + ". value is: " + value);
+        }
+    }
+
+    public static void printMapKeyTypeOfDishValueListOfString(Map<Dish.DishType, List<String>> map) {
+        for (Map.Entry<Dish.DishType, List<String>> pair : map.entrySet()) {
+            Dish.DishType key = pair.getKey();
+            List<String> value = pair.getValue();
+            System.out.println("key is: " + key + ". value is: " + value);
+        }
+    }
 
     @Before
     public void setUp() {
@@ -350,6 +365,17 @@ public class DishTest {
 
     }
 
+
+    // 2 - DONE. This part is done it was unexpectedly easy
+    @Test
+    public void avDishesCaloriesSeparatedByTypesWithMapStreamTest() throws Exception {
+        Map<Dish.DishType, Double> dishTypeDoubleMap = dishes.stream()
+                .collect(Collectors.groupingBy(
+                        Dish::getType, Collectors.averagingDouble(Dish::getCalories)));
+        printMapKeyTypeOfDishValueDouble(dishTypeDoubleMap);
+
+    }
+
     // 3 part with streams
     // not done
     // need to transform List<Dish> to List<String> with ONLY Names of Dishes
@@ -366,6 +392,18 @@ public class DishTest {
                 .map(Dish::getName)
                 .collect(Collectors.toList());
         collect777.forEach(System.out::println);
+
+    }
+
+    // 3part is done it was again unexpectedly easy
+    @Test
+    public void mapDishTypeAndListOfStringsBioDishesTest() throws Exception {
+        Map<Dish.DishType, List<String>> dishTypeListMap = dishes.stream()
+                .filter(Dish::getIsBio)
+                .collect(Collectors.groupingBy(
+                        Dish::getType, Collectors.mapping(Dish::getName, Collectors.toList())));
+
+        printMapKeyTypeOfDishValueListOfString(dishTypeListMap);
 
     }
 
