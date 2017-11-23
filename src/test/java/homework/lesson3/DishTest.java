@@ -66,6 +66,24 @@ public class DishTest {
 
 
     //without Stream 1 part
+    //for BDD
+
+    @Test
+    public void mostLowCaloriesDisheBDD() {
+        List<Dish> list = restaurant.mostLowCaloriesDishes();
+        System.out.println(list);
+        assertThat(list, hasSize(2));
+    }
+
+    @Test
+    public void mostLowCaloriesDishesIfNeeDJustNamesBDD() {
+        List<String> list = restaurant.mostLowCaloriesDishesIfNeeDJustNames();
+        System.out.println(list);
+        assertThat(list, hasSize(2));
+    }
+
+
+
     //1a-Done
 
     @Test
