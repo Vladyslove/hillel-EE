@@ -1,6 +1,5 @@
 *.iml
-*.xml
-/.gradle/
-/.idea/
+.gradle
+.idea
 /build
 .class
