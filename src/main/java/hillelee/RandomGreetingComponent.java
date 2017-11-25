@@ -14,10 +14,10 @@ import java.util.List;
 @Component
 public class RandomGreetingComponent {
 
-    List<String> listOfOutputMessages = new ArrayList<>();
+    private static List<String> listOfOutputMessages = new ArrayList<>();
 
     @Bean
-    public String displayRandomGreetingComponent() {
+    public static String displayRandomGreetingComponent() {
         listOfOutputMessages.add("hello world with Class and method and Component");
         listOfOutputMessages.add("hola world with Class and method and Component");
         listOfOutputMessages.add("bonjour world with Class and method and Component");

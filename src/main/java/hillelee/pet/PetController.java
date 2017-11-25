@@ -12,7 +12,7 @@ import java.util.List;
 public class PetController {
 
     // for HW4 part 3
-    RandomGreetingComponent randomGreetingComponent;
+    private RandomGreetingComponent randomGreetingComponent;
     public PetController (RandomGreetingComponent randomGreetingComponent) {
         this.randomGreetingComponent = randomGreetingComponent;
     }
@@ -55,6 +55,12 @@ public class PetController {
     // for HW4 part 3
     @GetMapping(value = "/greeting5")
     public String helloWorld5() {
+        return randomGreetingComponent.displayRandomGreetingComponent();
+    }
+
+    // for test - can be deleted
+    @GetMapping(value = "/greeting6")
+    public String helloWorld6() {
         return randomGreetingComponent.displayRandomGreetingComponent();
     }
 }
