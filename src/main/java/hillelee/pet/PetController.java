@@ -1,5 +1,7 @@
 package hillelee.pet;
 
+//import hillelee.RandomGreetingComponent;
+import hillelee.RandomGreetingComponent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,7 +11,13 @@ import java.util.List;
 @RestController
 public class PetController {
 
-//    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
+    // for HW4 part 3
+    RandomGreetingComponent randomGreetingComponent;
+    public PetController (RandomGreetingComponent randomGreetingComponent) {
+        this.randomGreetingComponent = randomGreetingComponent;
+    }
+
+    //    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     @GetMapping(value = "/greeting")
     public String helloWorld() {
         return "helloWorld";
@@ -20,12 +28,11 @@ public class PetController {
         return "helloWorld22";
     }
 
-
-    /** @HW4
-      1.Изменить выводимое сообщение с “hello world” на случайное:
-     “hello world”
-     “hola world”
-     “bonjour world”...
+    /**
+     * @HW4 1.Изменить выводимое сообщение с “hello world” на случайное:
+     * “hello world”
+     * “hola world”
+     * “bonjour world”...
      */
     @GetMapping(value = "/greeting3")
     public String helloWorld3() {
@@ -38,9 +45,17 @@ public class PetController {
         return output;
     }
 
+
+    // for HW4 part 2
     @GetMapping(value = "/greeting4")
     public String helloWorld4() {
         return RandomGreeting.displayRandomGreeting();
+    }
+
+    // for HW4 part 3
+    @GetMapping(value = "/greeting5")
+    public String helloWorld5() {
+        return randomGreetingComponent.displayRandomGreetingComponent();
     }
 }
     /** @HW4
