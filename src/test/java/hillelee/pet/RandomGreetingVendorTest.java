@@ -37,9 +37,9 @@ public class RandomGreetingVendorTest {
         printMap(greetingsMap);
 
         List<String> phrases = new ArrayList<>();
-        phrases.add("bonjour world with Class and method and Component");
-        phrases.add("hello world with Class and method and Component");
-        phrases.add("hola world with Class and method and Component");
+        phrases.add("bonjour world via using dependency-injection");
+        phrases.add("hello world via using dependency-injection");
+        phrases.add("hola world via using dependency-injection");
 
         double percent1 = (double) (greetingsMap.get(phrases.get(0))) /sizeOfSelection * 100;
         double percent2 = (double) (greetingsMap.get(phrases.get(1))) /sizeOfSelection * 100;

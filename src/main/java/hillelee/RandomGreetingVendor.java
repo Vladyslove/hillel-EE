@@ -11,11 +11,12 @@ import java.util.List;
 @Component
 public class RandomGreetingVendor {
 
-    private List<String> listOfOutputMessages = new ArrayList<String>(){{
-    listOfOutputMessages.add("hello world via using dependency-injection");
-    listOfOutputMessages.add("hola world via using dependency-injection");
-    listOfOutputMessages.add("bonjour world via using dependency-injection");
-    }};
+    private List<String> listOfOutputMessages = new ArrayList<>();
+    {
+        listOfOutputMessages.add("hello world via using dependency-injection");
+        listOfOutputMessages.add("hola world via using dependency-injection");
+        listOfOutputMessages.add("bonjour world via using dependency-injection");
+    }
 
     public String getRandomGreeting() {
         return listOfOutputMessages.get((int) (Math.random() * 3));
