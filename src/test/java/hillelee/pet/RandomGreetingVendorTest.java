@@ -1,22 +1,22 @@
 package hillelee.pet;
 
-import hillelee.RandomGreetingComponent;
+import hillelee.RandomGreetingVendor;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
 
-public class RandomGreetingComponentTest {
+public class RandomGreetingVendorTest {
 
     @Test
-    public void displayRandomGreetingComponent() throws Exception {
-        RandomGreetingComponent randomGreetingComponent = new RandomGreetingComponent();
+    public void getRandomGreeting() throws Exception {
+        RandomGreetingVendor RandomGreetingVendor = new RandomGreetingVendor();
         Map<String, Integer> greetingsMap = new HashMap<>();
         int sizeOfSelection = 1_000;
         String greeting;
 
         for (int i = 0; i < sizeOfSelection; i++) {
-            greeting = randomGreetingComponent.displayRandomGreetingComponent();
+            greeting = RandomGreetingVendor.getRandomGreeting();
             if (greetingsMap.containsKey(greeting)) {
                 greetingsMap.put(greeting, greetingsMap.get(greeting) + 1);
             } else {
