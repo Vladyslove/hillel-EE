@@ -4,10 +4,37 @@ import hillelee.RandomGreetingVendor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RandomGreetingVendorTest {
+
+    @Test
+    public void getRandomGreetingWithStreams() throws Exception {
+        RandomGreetingVendor RandomGreetingVendor = new RandomGreetingVendor();
+        Map<String, Integer> greetingsMap = new HashMap<>();
+        Integer sizeOfSelection = 3_000;
+        String greeting;
+
+        for (int i = 0; i < sizeOfSelection; i++) {
+            greeting = RandomGreetingVendor.getRandomGreeting();
+            greetingsMap.put(greeting, greetingsMap.containsKey(greeting) ? greetingsMap.get(greeting) + 1 : 1);
+        }
+
+        greetingsMap.entrySet().stream().
+                peek(entry -> {
+                    System.out.println(calculatePercentage(entry.getValue(), sizeOfSelection));
+                    Assert.assertTrue(calculatePercentage(entry.getValue(), sizeOfSelection) <= 10);
+                }).toArray();
+    }
+
+    private double calculatePercentage(Integer actual, Integer sizeOfSelection) {
+        double expected = sizeOfSelection / 3;
+
+        return (Math.abs(actual - expected)) / expected * 100;
+    }
 
     @Test
     public void getRandomGreetingWithoutUsingStreams() throws Exception {
@@ -24,8 +51,6 @@ public class RandomGreetingVendorTest {
                 greetingsMap.put(greeting, 1);
             }
         }
-
-        printMap(greetingsMap);
 
         List<String> phrases = new ArrayList<>();
         phrases.add("bonjour world via using dependency-injection");
@@ -49,56 +74,5 @@ public class RandomGreetingVendorTest {
         System.out.println("deviation percent 3 is : " + deviation3);*/
         System.out.println("average deviation is: " + averageDeviation);
         Assert.assertTrue(averageDeviation < 10);
-    }
-
-    @Test
-    public void getRandomGreetingWithStreams() throws Exception {
-        RandomGreetingVendor RandomGreetingVendor = new RandomGreetingVendor();
-        Map<String, Integer> greetingsMap = new HashMap<>();
-        Integer sizeOfSelection = 3_000;
-        String greeting;
-
-        /*for (int i = 0; i < sizeOfSelection; i++) {
-            greeting = RandomGreetingVendor.getRandomGreeting();
-            greetingsMap.put(greeting, greetingsMap.containsKey(greeting) ? greetingsMap.get(greeting) + 1 : 1);
-        }*/
-
-
-        /*for (int i = 0; i < sizeOfSelection; i++) {
-            greeting = RandomGreetingVendor.getRandomGreeting();
-            if (greetingsMap.containsKey(greeting)) {
-                greetingsMap.put(greeting, greetingsMap.get(greeting) + 1);
-            } else {
-                greetingsMap.put(greeting, 1);
-            }
-        }*/
-
-        for (int i = 0; i < sizeOfSelection; i++) {
-            greeting = RandomGreetingVendor.getRandomGreeting();
-            greetingsMap.put(greeting, greetingsMap.containsKey(greeting) ? greetingsMap.get(greeting) + 1 : 1);
-
-        }
-
-        Set<Map.Entry<String, Integer>> set = greetingsMap.entrySet();
-        set.stream().
-                peek(entry -> {
-                    System.out.println(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection));
-                    Assert.assertTrue(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection) <= 10);
-                    Assert.assertFalse(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection) < 0);
-                }).toArray();
-        printMap(greetingsMap);
-    }
-
-    private double calculatePercentage(Integer actual, Integer sizeOfSelection) {
-        double expected = sizeOfSelection / 3;
-
-        return (Math.abs(actual - expected)) / expected * 100;
-    }
-    private static void printMap(Map<String, Integer> map) {
-        for (Map.Entry<String, Integer> pair : map.entrySet()) {
-            String key = pair.getKey();
-            Integer value = pair.getValue();
-            System.out.println("key is: " + key + ". value is: " + value);
-        }
     }
 }
