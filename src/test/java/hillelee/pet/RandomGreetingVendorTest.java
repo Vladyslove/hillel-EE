@@ -5,11 +5,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class RandomGreetingVendorTest {
 
     @Test
-    public void getRandomGreeting() throws Exception {
+    public void getRandomGreetingWithoutUsingStreams() throws Exception {
         RandomGreetingVendor RandomGreetingVendor = new RandomGreetingVendor();
         Map<String, Integer> greetingsMap = new HashMap<>();
         int sizeOfSelection = 1_000;
@@ -24,16 +25,6 @@ public class RandomGreetingVendorTest {
             }
         }
 
-            // without if else - it's hard to understand at once
-//            greetingsMap.put(greeting, greetingsMap.containsKey(greeting)? greetingsMap.get(greeting) + 1 : 1);
-//            Set<Map.Entry<String, Integer>> entrySet = greetingsMap.entrySet();
-//        double percent = computePercentage(e.getValue(), sizeOfSelection);
-//        entrySet.stream()
-//                .peek(e -> {
-//                    System.out.println(computePercentage(e.getValue(), sizeOfSelection));
-//                    Assert.assertTrue(computePercentage(e.getValue(), sizeOfSelection) <=10);
-//                });
-//        greetingsMap.entrySet();
         printMap(greetingsMap);
 
         List<String> phrases = new ArrayList<>();
@@ -60,6 +51,49 @@ public class RandomGreetingVendorTest {
         Assert.assertTrue(averageDeviation < 10);
     }
 
+    @Test
+    public void getRandomGreetingWithStreams() throws Exception {
+        RandomGreetingVendor RandomGreetingVendor = new RandomGreetingVendor();
+        Map<String, Integer> greetingsMap = new HashMap<>();
+        Integer sizeOfSelection = 3_000;
+        String greeting;
+
+        /*for (int i = 0; i < sizeOfSelection; i++) {
+            greeting = RandomGreetingVendor.getRandomGreeting();
+            greetingsMap.put(greeting, greetingsMap.containsKey(greeting) ? greetingsMap.get(greeting) + 1 : 1);
+        }*/
+
+
+        /*for (int i = 0; i < sizeOfSelection; i++) {
+            greeting = RandomGreetingVendor.getRandomGreeting();
+            if (greetingsMap.containsKey(greeting)) {
+                greetingsMap.put(greeting, greetingsMap.get(greeting) + 1);
+            } else {
+                greetingsMap.put(greeting, 1);
+            }
+        }*/
+
+        for (int i = 0; i < sizeOfSelection; i++) {
+            greeting = RandomGreetingVendor.getRandomGreeting();
+            greetingsMap.put(greeting, greetingsMap.containsKey(greeting) ? greetingsMap.get(greeting) + 1 : 1);
+
+        }
+
+        Set<Map.Entry<String, Integer>> set = greetingsMap.entrySet();
+        set.stream().
+                peek(entry -> {
+                    System.out.println(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection));
+                    Assert.assertTrue(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection) <= 10);
+                    Assert.assertFalse(RandomGreetingVendorTest.this.calculatePercentage(entry.getValue(), sizeOfSelection) < 0);
+                }).toArray();
+        printMap(greetingsMap);
+    }
+
+    private double calculatePercentage(Integer actual, Integer sizeOfSelection) {
+        double expected = sizeOfSelection / 3;
+
+        return (Math.abs(actual - expected)) / expected * 100;
+    }
     private static void printMap(Map<String, Integer> map) {
         for (Map.Entry<String, Integer> pair : map.entrySet()) {
             String key = pair.getKey();
@@ -67,10 +101,4 @@ public class RandomGreetingVendorTest {
             System.out.println("key is: " + key + ". value is: " + value);
         }
     }
-
-    /*private double computePercentage(Integer actual, Integer sizeOfSelection) {
-        double expected = sizeOfSelection / 3;
-
-        return (Math.abs(actual - expected)) / expected * 100;
-    }*/
 }

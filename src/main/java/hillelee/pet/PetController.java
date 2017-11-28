@@ -16,7 +16,7 @@ public class PetController {
     private RandomGreetingVendor randomGreetingVendor;
 
     @GetMapping(value = "/greeting2")
-    public String helloWorld4() {
+    public String getRandomGreeting() {
         return randomGreetingVendor.getRandomGreeting();
     }
 
@@ -28,7 +28,7 @@ public class PetController {
      */
     //    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     @GetMapping(value = "/greeting")
-    public String getRandomGreeting() {
+    public String getRandomGreetingWithoutClass() {
         List<String> listOfOutputMessages = new ArrayList<>();
         listOfOutputMessages.add("hello world");
         listOfOutputMessages.add("hola world");
