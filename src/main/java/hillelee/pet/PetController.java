@@ -26,11 +26,9 @@ public class PetController {
     public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie,
                              @RequestParam String gentle) {
     /*(required = false)- don't need because of Optional*/
-
         Predicate<Pet> specieFilter = specie.map(this::filterBySpecie)
                 // after operation .map - we have Optional with filter
                                                 .orElse(pet -> true);
-
        /* if (!specie.isPresent()) { // instead of if specie == null
             return pets;
         } else {*/
@@ -39,8 +37,6 @@ public class PetController {
                 .collect(Collectors.toList());
         /*}*/
     }
-
-    // method which accept String and return Predicate
 
     @GetMapping("/pets/{id}")
     public ResponseEntity<? /*super Pet*/> getPetById(@PathVariable Integer id) {
@@ -72,6 +68,12 @@ public class PetController {
         } return ResponseEntity.ok(pets.set(id, pet)) ;
     }*/
 
+    @DeleteMapping("/pets/{id}")
+    public void deletePet(@PathVariable Integer id) {
+        pets.remove(id.intValue( ));
+    }
+
+    // method which accept String and return Predicate
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
     }
