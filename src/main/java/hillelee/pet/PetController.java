@@ -24,18 +24,33 @@ public class PetController {
     //CW5
     @GetMapping("/pets")
     public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie,
-                             @RequestParam String gentle) {
+                             @RequestParam Optional<Integer> age) {
     /*(required = false)- don't need because of Optional*/
+
+        Predicate<Pet> ageFilter = age.map(this::filterByAge)
+                .orElse(pet -> true);
         Predicate<Pet> specieFilter = specie.map(this::filterBySpecie)
                 // after operation .map - we have Optional with filter
                                                 .orElse(pet -> true);
+
+        Predicate<Pet> complexFilter = ageFilter.and(specieFilter);
        /* if (!specie.isPresent()) { // instead of if specie == null
             return pets;
         } else {*/
         return  pets.values().stream()
-                .filter(specieFilter)
+                .filter(complexFilter)
                 .collect(Collectors.toList());
         /*}*/
+
+    }
+
+    private Predicate<Pet> filterByAge(Integer age) {
+        return pet -> pet.getAge().equals(age);
+    }
+
+    // method which accept String and return Predicate
+    private Predicate<Pet> filterBySpecie(String specie) {
+        return pet -> pet.getSpecies().equals(specie);
     }
 
     @GetMapping("/pets/{id}")
@@ -72,12 +87,6 @@ public class PetController {
     public void deletePet(@PathVariable Integer id) {
         pets.remove(id.intValue( ));
     }
-
-    // method which accept String and return Predicate
-    private Predicate<Pet> filterBySpecie(String specie) {
-        return pet -> pet.getSpecies().equals(specie);
-    }
-
 }
 
 @Data
