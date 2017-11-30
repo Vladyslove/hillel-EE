@@ -4,36 +4,65 @@ package hillelee.doctor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class DoctorController {
 
-    private Map<Integer, Doctor> doctors = new HashMap<Integer, Doctor>(){{
-        put(0,new Doctor(1, "John Doe", "Dentist"));
-        put(1,new Doctor(2, "Jane Roe", "Therapist"));
-        put(2,new Doctor(3, "Drake Ramore", "Surgeon"));
+    private Map<Integer, Doctor> doctors = new HashMap<Integer, Doctor>() {{
+        put(0, new Doctor(1, "John Doe", "Dentist"));
+        put(1, new Doctor(2, "Jane Roe", "Therapist"));
+        put(2, new Doctor(3, "Drake Ramore", "Surgeon"));
     }};
+
+ /*   List<Map.Entry<Integer, Doctor>> idOfDoctors = doctors.entrySet().
+            stream()
+//                .filter((Predicate<? super Entry<Integer, Doctor>>) doctors.values()
+//                        .stream())
+            .peek
+                    (e -> e.getValue().getId()).
+                    collect(Collectors.toList());*/
 
     private Integer counter = doctors.size();
 
+   /* @PostMapping("/doctors")
+    public ResponseEntity<?> createDoctor(@PathVariable Integer id) {
+        for (int i = 0; i < idOfDoctors.size(); i++) {
+            if (id.equals(idOfDoctors.get(i))) {
+                return ResponseEntity.badRequest()
+                        .body(new ErrorBody("Doctor with such id [ " + id + " already exist"));
+            } return (ResponseEntity<?>) ResponseEntity.ok();
+        }
+        return null;
+    }*/
 
+    //POST1
     @PostMapping("/doctors")
     public ResponseEntity<Void> createDoctor(@RequestBody Doctor doctor) {
         doctors.put(counter++, doctor);
         return ResponseEntity.created(URI.create("doctors/" + counter)).build();
     }
 
-    @GetMapping("doctors")
+    // GET1
+    @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
+    }
+
+    // GET2
+    @GetMapping("/doctors/{id}")
+    public ResponseEntity<? super Doctor> getDoctorById(@PathVariable Integer id) {
+        if (id >= doctors.size()) {
+            return ResponseEntity.badRequest().
+                    body(new ErrorBody("There is no doctor with id " + id));
+        }
+        return ResponseEntity.ok(doctors.get(id));
     }
 }
 
@@ -51,5 +80,4 @@ class Doctor {
     private Integer id;
     private String name;
     private String specializaion;
-
 }
