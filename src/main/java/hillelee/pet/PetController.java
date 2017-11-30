@@ -2,38 +2,58 @@ package hillelee.pet;
 
 import hillelee.RandomGreetingVendor;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+//@AllArgsConstructor
 @RestController
-@AllArgsConstructor
 public class PetController {
 
-    // for HW4 part 2-3
-    private RandomGreetingVendor randomGreetingVendor;
+    private List<Pet> pets = new ArrayList<Pet>(){{
+                    add(new Pet("Tom", "Cat", 3));
+                    add(new Pet("Jerry", "Mouse", 5));
+            }};
 
-    @GetMapping(value = "/greeting2")
-    public String getRandomGreeting() {
-        return randomGreetingVendor.getRandomGreeting();
+    //CW5
+    @GetMapping("/pets")
+    public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie) {
+    /*(required = false)- don't need because of Optional*/
+
+        Predicate<Pet> specieFilter = specie.map(this::filterBySpecie)
+                // after operation .map - we have Optional with filter
+                                                .orElse(pet -> true);
+
+       /* if (!specie.isPresent()) { // instead of if specie == null
+            return pets;
+        } else {*/
+                 return  pets.stream()
+                .filter(specieFilter)
+                .collect(Collectors.toList());
+        /*}*/
     }
 
-    /**
-     * @HW4 1.Изменить выводимое сообщение с “hello world” на случайное:
-     * “hello world”
-     * “hola world”
-     * “bonjour world”...
-     */
-    //    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    @GetMapping(value = "/greeting")
-    public String getRandomGreetingWithoutClass() {
-        List<String> listOfOutputMessages = new ArrayList<>();
-        listOfOutputMessages.add("hello world");
-        listOfOutputMessages.add("hola world");
-        listOfOutputMessages.add("bonjour world");
-        return listOfOutputMessages.get((int) (Math.random() * 3));
+    // method which accept String and return Predicate
+
+    private Predicate<Pet> filterBySpecie(String specie) {
+        return pet -> pet.getSpecies().equals(specie);
     }
+
+}
+
+@Data
+@AllArgsConstructor
+class Pet {
+    private String name;
+    private String species;
+    private Integer age;
 }
 
