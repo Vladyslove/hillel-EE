@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,10 +14,12 @@ import java.util.stream.Collectors;
 @RestController
 public class PetController {
 
-    private List<Pet> pets = new ArrayList<Pet>(){{
-                    add(new Pet("Tom", "Cat", 3));
-                    add(new Pet("Jerry", "Mouse", 5));
-            }};
+    private Integer counter = 2;
+
+    private Map<Integer, Pet> pets = new HashMap<Integer, Pet>(){{
+        put(0,new Pet("Tom", "Cat", 3));
+        put(1,new Pet("Jerry", "Mouse", 5));
+    }};
 
     //CW5
     @GetMapping("/pets")
@@ -32,7 +32,7 @@ public class PetController {
        /* if (!specie.isPresent()) { // instead of if specie == null
             return pets;
         } else {*/
-                 return  pets.stream()
+        return  pets.values().stream()
                 .filter(specieFilter)
                 .collect(Collectors.toList());
         /*}*/
@@ -49,13 +49,13 @@ public class PetController {
 
     @PostMapping("/pets")
     public void createPet(@RequestBody Pet pet) {
-        pets.add(pet);
+        pets.put(counter++, pet);
     }
 
     @PutMapping("/pets/{id}")
     public void updatePet(@PathVariable Integer id,
                           @RequestBody Pet pet) {
-        pets.set(id, pet);
+        pets.put(id, pet);
     }
 
   /*  added by me PUT with exception handling
