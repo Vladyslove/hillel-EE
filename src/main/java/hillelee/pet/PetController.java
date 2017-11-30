@@ -62,6 +62,16 @@ public class PetController {
         pets.set(id, pet);
     }
 
+  /*  added by me PUT with exception handling
+  @PutMapping("/pets/{id}")
+    public ResponseEntity<? *//*super Pet*//*> updatePet(@PathVariable Integer id,
+                                                     @RequestBody Pet pet) {
+        if (id >=pets.size()) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorBody("There is not pets with id (for Put method)" + id));
+        } return ResponseEntity.ok(pets.set(id, pet)) ;
+    }*/
+
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
     }
