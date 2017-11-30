@@ -2,6 +2,7 @@ package hillelee.pet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,18 +45,25 @@ public class PetController {
     // method which accept String and return Predicate
 
     @GetMapping("/pets/{id}")
-    public Pet getPetById(@PathVariable Integer id) {
+    public ResponseEntity<? /*super Pet*/> getPetById(@PathVariable Integer id) {
         if (id >= pets.size()) {
-            return 404;
-        } else {
-            return pets.get(id);
+            return ResponseEntity.badRequest() // badRequest()- give us 400 BadRequest in postMan
+                    .body(new ErrorBody("There is no pets with id " + id));
         }
+            return ResponseEntity.ok(pets.get(id));
     }
 
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
     }
 
+}
+
+@Data
+@AllArgsConstructor
+class ErrorBody {
+    private final Integer code = 400;
+    private String body;
 }
 
 @Data
