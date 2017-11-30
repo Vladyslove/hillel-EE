@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 public class PetController {
 
-    private Integer counter = 2;
+    private Integer counter = 1;
 
     private Map<Integer, Pet> pets = new HashMap<Integer, Pet>(){{
         put(0,new Pet("Tom", "Cat", 3));
@@ -64,8 +65,9 @@ public class PetController {
     }
 
     @PostMapping("/pets")
-    public void createPet(@RequestBody Pet pet) {
-        pets.put(counter++, pet);
+    public ResponseEntity<Void> createPet(@RequestBody Pet pet) {
+        pets.put(++counter, pet);
+        return ResponseEntity.created(URI.create("pets/" + counter)).build();
     }
 
     @PutMapping("/pets/{id}")
