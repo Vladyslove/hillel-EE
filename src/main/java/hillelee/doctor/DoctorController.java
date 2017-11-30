@@ -6,10 +6,13 @@ import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.Doc;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -49,21 +52,38 @@ public class DoctorController {
         return ResponseEntity.created(URI.create("doctors/" + counter)).build();
     }
 
-    // GET1
+   /* // GET1
     @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
-    }
+    }*/
 
     // GET2
     @GetMapping("/doctors/{id}")
     public ResponseEntity<? super Doctor> getDoctorById(@PathVariable Integer id) {
         if (id >= doctors.size()) {
-            return ResponseEntity.badRequest().
-                    body(new ErrorBody("There is no doctor with id " + id));
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(doctors.get(id));
     }
+
+    //GET3
+    @GetMapping("/doctors")
+    public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation) {
+
+        Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
+                .orElse(pet -> true);
+
+        return doctors.values().stream()
+                .filter(specialisationFilter)
+                .collect(Collectors.toList());
+
+    }
+        private Predicate<Doctor> filterBySpecialisation (String specialisation){
+            return doctor -> doctor.getSpecialisation().equals(specialisation);
+        }
+
+
 }
 
 @Data
@@ -79,5 +99,5 @@ class ErrorBody {
 class Doctor {
     private Integer id;
     private String name;
-    private String specializaion;
+    private String specialisation;
 }
