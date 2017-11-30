@@ -3,6 +3,7 @@ package hillelee.pet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +75,7 @@ public class PetController {
     }
 
   /*  added by me PUT with exception handling
-  @PutMapping("/pets/{id}")
+    @PutMapping("/pets/{id}")
     public ResponseEntity<? *//*super Pet*//*> updatePet(@PathVariable Integer id,
                                                      @RequestBody Pet pet) {
         if (id >=pets.size()) {
@@ -84,6 +85,7 @@ public class PetController {
     }*/
 
     @DeleteMapping("/pets/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePet(@PathVariable Integer id) {
         pets.remove(id.intValue( ));
     }
