@@ -2,11 +2,9 @@ package hillelee.pet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +51,12 @@ public class PetController {
             return ResponseEntity.ok(pets.get(id));
     }
 
+    @PostMapping("/pets")
+    public void createPet(@RequestBody   Pet pet) {
+        pets.add(pet);
+    }
+
+
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
     }
@@ -68,6 +72,7 @@ class ErrorBody {
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 class Pet {
     private String name;
     private String species;
