@@ -28,7 +28,6 @@ public class PetController {
     public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie,
                              @RequestParam Optional<Integer> age) {
     /*(required = false)- don't need because of Optional*/
-
         Predicate<Pet> ageFilter = age.map(this::filterByAge)
                 .orElse(pet -> true);
         Predicate<Pet> specieFilter = specie.map(this::filterBySpecie)
@@ -43,7 +42,6 @@ public class PetController {
                 .filter(complexFilter)
                 .collect(Collectors.toList());
         /*}*/
-
     }
 
     private Predicate<Pet> filterByAge(Integer age) {
