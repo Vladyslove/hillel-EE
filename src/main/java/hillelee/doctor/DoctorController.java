@@ -3,15 +3,13 @@ package hillelee.doctor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -24,17 +22,18 @@ public class DoctorController {
         put(2, new Doctor(3, "Drake Ramore", "Surgeon"));
     }};
 
- /*   List<Map.Entry<Integer, Doctor>> idOfDoctors = doctors.entrySet().
+    private Integer counter = doctors.size();
+
+   /* //POST2
+    List<Map.Entry<Integer, Doctor>> idOfDoctors = doctors.entrySet().
             stream()
 //                .filter((Predicate<? super Entry<Integer, Doctor>>) doctors.values()
 //                        .stream())
             .peek
                     (e -> e.getValue().getId()).
-                    collect(Collectors.toList());*/
+                    collect(Collectors.toList());
 
-    private Integer counter = doctors.size();
-
-   /* @PostMapping("/doctors")
+    @PostMapping("/doctors")
     public ResponseEntity<?> createDoctor(@PathVariable Integer id) {
         for (int i = 0; i < idOfDoctors.size(); i++) {
             if (id.equals(idOfDoctors.get(i))) {
@@ -52,11 +51,11 @@ public class DoctorController {
         return ResponseEntity.created(URI.create("doctors/" + counter)).build();
     }
 
-   /* // GET1
+    // GET1
     @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
-    }*/
+    }
 
     // GET2
     @GetMapping("/doctors/{id}")
@@ -72,18 +71,30 @@ public class DoctorController {
     public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation) {
 
         Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
-                .orElse(pet -> true);
+                .orElse(doctor -> true);
 
         return doctors.values().stream()
                 .filter(specialisationFilter)
                 .collect(Collectors.toList());
-
     }
         private Predicate<Doctor> filterBySpecialisation (String specialisation){
             return doctor -> doctor.getSpecialisation().equals(specialisation);
         }
 
+    //GET4
+    @GetMapping("/doctors")
+    public List<Doctor> getDoctorsByName(@RequestParam Optional<String> name) {
 
+        final Predicate<Doctor> nameFilter = name.map(this::filterByName).
+                orElse(doctor -> true);
+
+        return doctors.values().stream()
+                .filter(nameFilter)
+                .collect(Collectors.toList());
+    }
+    private Predicate<Doctor> filterByName(String name) {
+            return doctor -> doctor.getName().equals(name);
+    }
 }
 
 @Data
@@ -95,7 +106,7 @@ class ErrorBody {
 
 @Data
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 class Doctor {
     private Integer id;
     private String name;
