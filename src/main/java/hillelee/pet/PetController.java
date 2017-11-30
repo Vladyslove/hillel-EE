@@ -1,6 +1,5 @@
 package hillelee.pet;
 
-import hillelee.RandomGreetingVendor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,8 @@ public class PetController {
 
     //CW5
     @GetMapping("/pets")
-    public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie) {
+    public List<Pet> getPets(@RequestParam/*(required = false)*/ Optional<String> specie,
+                             @RequestParam String gentle) {
     /*(required = false)- don't need because of Optional*/
 
         Predicate<Pet> specieFilter = specie.map(this::filterBySpecie)
@@ -42,6 +42,15 @@ public class PetController {
     }
 
     // method which accept String and return Predicate
+
+    @GetMapping("/pets/{id}")
+    public Pet getPetById(@PathVariable Integer id) {
+        if (id >= pets.size()) {
+            return 404;
+        } else {
+            return pets.get(id);
+        }
+    }
 
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
