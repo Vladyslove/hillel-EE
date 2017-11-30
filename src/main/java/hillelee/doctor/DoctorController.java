@@ -4,6 +4,7 @@ package hillelee.doctor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,12 +48,12 @@ public class DoctorController {
     //POST1
     @PostMapping("/doctors")
     public ResponseEntity<Void> createDoctor(@RequestBody Doctor doctor) {
-        doctors.put(counter++, doctor);
+        doctors.put(++counter, doctor);
         return ResponseEntity.created(URI.create("doctors/" + counter)).build();
     }
 
     // GET1
-    @GetMapping("/doctors")
+//    @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
     }
@@ -67,7 +68,7 @@ public class DoctorController {
     }
 
     //GET3
-    @GetMapping("/doctors")
+//    @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation) {
 
         Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
@@ -94,6 +95,18 @@ public class DoctorController {
     }
     private Predicate<Doctor> filterByName(String name) {
             return doctor -> doctor.getName().equals(name);
+    }
+
+    //PUT1-2
+    @PutMapping("/doctors/{id}")
+    public ResponseEntity<Doctor> updateDoctor (@PathVariable Integer id,
+                                                @RequestBody Doctor doctor){
+
+        if (id < doctors.size()) {
+            doctors.put(id,doctor);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
 
