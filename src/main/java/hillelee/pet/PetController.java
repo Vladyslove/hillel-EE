@@ -89,8 +89,16 @@ public class PetController {
     @DeleteMapping("/pets/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePet(@PathVariable Integer id) {
-        pets.remove(id.intValue( ));
+        if (!pets.containsKey(id)) {
+            throw new NoSuchPetException();
+        }
+        pets.remove(id);
     }
+}
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class NoSuchPetException extends RuntimeException {
+
 }
 
 @Data
