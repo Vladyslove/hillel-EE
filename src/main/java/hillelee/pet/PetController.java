@@ -52,10 +52,15 @@ public class PetController {
     }
 
     @PostMapping("/pets")
-    public void createPet(@RequestBody   Pet pet) {
+    public void createPet(@RequestBody Pet pet) {
         pets.add(pet);
     }
 
+    @PutMapping("/pets/{id}")
+    public void updatePet(@PathVariable Integer id,
+                          @RequestBody Pet pet) {
+        pets.set(id, pet);
+    }
 
     private Predicate<Pet> filterBySpecie(String specie) {
         return pet -> pet.getSpecies().equals(specie);
