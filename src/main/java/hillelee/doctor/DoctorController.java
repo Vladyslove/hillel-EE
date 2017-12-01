@@ -1,6 +1,5 @@
 package hillelee.doctor;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,26 +23,6 @@ public class DoctorController {
 
     private Integer counter = doctors.size();
 
-   /* //POST2
-    List<Map.Entry<Integer, Doctor>> idOfDoctors = doctors.entrySet().
-            stream()
-//                .filter((Predicate<? super Entry<Integer, Doctor>>) doctors.values()
-//                        .stream())
-            .peek
-                    (e -> e.getValue().getId()).
-                    collect(Collectors.toList());
-
-    @PostMapping("/doctors")
-    public ResponseEntity<?> createDoctor(@PathVariable Integer id) {
-        for (int i = 0; i < idOfDoctors.size(); i++) {
-            if (id.equals(idOfDoctors.get(i))) {
-                return ResponseEntity.badRequest()
-                        .body(new ErrorBody("Doctor with such id [ " + id + " already exist"));
-            } return (ResponseEntity<?>) ResponseEntity.ok();
-        }
-        return null;
-    }*/
-
     //POST1
     @PostMapping("/doctors")
     public ResponseEntity<Void> createDoctor(@RequestBody Doctor doctor) {
@@ -52,7 +31,7 @@ public class DoctorController {
     }
 
     // GET1
-//    @GetMapping("/doctors")
+    @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
     }
@@ -67,7 +46,7 @@ public class DoctorController {
     }
 
     //GET3
-//    @GetMapping("/doctors")
+    @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation) {
 
         Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
@@ -81,7 +60,7 @@ public class DoctorController {
             return doctor -> doctor.getSpecialisation().equals(specialisation);
         }
 
-    //GET4
+    //GET4 (not finished)
     @GetMapping("/doctors")
     public List<Doctor> getDoctorsByName(@RequestParam Optional<String> name) {
 
@@ -108,7 +87,7 @@ public class DoctorController {
         return ResponseEntity.notFound().build();
     }
 
-    //Delete1
+    //Delete1-2
     @DeleteMapping("/doctors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctors(@PathVariable Integer id) {
@@ -119,9 +98,8 @@ public class DoctorController {
     }
 }
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "There is no doctor with such number"  )
 class NoSuchDoctorException extends RuntimeException {
-
 }
 
 @Data
