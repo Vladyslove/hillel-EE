@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Predicate;
@@ -108,13 +107,21 @@ public class DoctorController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    //Delete1
+    @DeleteMapping("/doctors/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDoctors(@PathVariable Integer id) {
+        if (!doctors.containsKey(id)) {
+            throw new NoSuchDoctorException();
+        }
+        doctors.remove(id);
+    }
 }
 
-@Data
-@AllArgsConstructor
-class ErrorBody {
-    private final Integer code = 400;
-    private String body;
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class NoSuchDoctorException extends RuntimeException {
+
 }
 
 @Data
