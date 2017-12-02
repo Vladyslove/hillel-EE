@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,22 +19,26 @@ import java.util.stream.Collectors;
 public class DoctorController {
 
     private Map<Integer, Doctor> doctors = new HashMap<Integer, Doctor>() {{
-        put(0, new Doctor(1, "John Doe", "Dentist"));
-        put(1, new Doctor(2, "Jane Roe", "Therapist"));
-        put(2, new Doctor(3, "Drake Ramore", "Surgeon"));
+        put(25, new Doctor(25, "John Doe", "Dentist"));
+        put(50, new Doctor(50, "Jane Roe", "Therapist"));
+        put(100, new Doctor(100, "Drake Ramore", "Surgeon"));
     }};
 
     private Integer counter = doctors.size();
 
-    //POST1
+    //POST
     @PostMapping("/doctors")
-    public ResponseEntity<Void> createDoctor(@RequestBody Doctor doctor) {
+    public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
+
+        if (doctors.containsKey(doctor.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
         doctors.put(++counter, doctor);
         return ResponseEntity.created(URI.create("doctors/" + counter)).build();
     }
 
     // GET1
-    @GetMapping("/doctors")
+//    @GetMapping("/doctors")
     public Map<Integer, Doctor> getDoctor() {
         return doctors;
     }
@@ -46,7 +53,7 @@ public class DoctorController {
     }
 
     //GET3
-    @GetMapping("/doctors")
+//    @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation) {
 
         Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
@@ -75,11 +82,13 @@ public class DoctorController {
             return doctor -> doctor.getName().equals(name);
     }
 
-    //PUT1-2
+    //PUT1-3
     @PutMapping("/doctors/{id}")
     public ResponseEntity<Doctor> updateDoctor (@PathVariable Integer id,
                                                 @RequestBody Doctor doctor){
-
+        if (doctors.containsKey(doctor.getId())) {
+           return ResponseEntity.badRequest().build();
+        }
         if (id < doctors.size()) {
             doctors.put(id,doctor);
             return ResponseEntity.noContent().build();
@@ -87,7 +96,7 @@ public class DoctorController {
         return ResponseEntity.notFound().build();
     }
 
-    //Delete1-2
+    //Delete
     @DeleteMapping("/doctors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctors(@PathVariable Integer id) {
