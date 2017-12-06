@@ -1,14 +1,11 @@
 package hillelee.pet;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import hillelee.util.ErrorBody;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,14 +19,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 public class PetController {
 
-    private Map<Integer, Pet> pets = new HashMap<Integer, Pet>() {{
-        put(0, new Pet("Tom", "Cat", 3));
-        put(1, new Pet("Jerry", "Mouse", 1));
-    }};
-
-    private Integer counter = 1;
+    private final PetService petService;
 
     @GetMapping(value = "/greeting")
     public String helloWorld(){
@@ -40,62 +33,43 @@ public class PetController {
     public List<Pet> getPets(@RequestParam Optional<String> specie,
                              @RequestParam Optional<Integer> age) {
 
-        Predicate<Pet> specieFilter = specie.map(this::filterByScpecie)
-                .orElse(pet -> true);
-
-        Predicate<Pet> ageFilter = age.map(this::filterByAge)
-                .orElse(pet -> true);
-
-        Predicate<Pet> complexFilter = ageFilter.and(specieFilter);
-
-        return pets.values().stream()
-                .filter(complexFilter)
-                .collect(Collectors.toList());
-    }
-
-    private Predicate<Pet> filterByAge(Integer age) {
-        return pet -> pet.getAge().equals(age);
+        return petService.getPets(specie, age);
     }
 
     @GetMapping("/pets/{id}")
     public ResponseEntity<?> getPetById(@PathVariable Integer id) {
-        if (id >= pets.size()) {
-            return ResponseEntity.badRequest()
-                    .body(new ErrorBody("there is no pet with ID = " + id));
-        }
+        Optional<Pet> mayBePet = petService.getById(id);
 
-        return ResponseEntity.ok(pets.get(id));
+        return mayBePet.map(Object.class::cast)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest()
+                        .body(new ErrorBody("there is no pet with ID = " + id)));
     }
 
     @PostMapping("/pets")
     public ResponseEntity<Void> createPet(@RequestBody Pet pet) {
-        Integer id;
 
-        synchronized (this) {
-            id = ++counter;
-            pets.put(id, pet);
-        }
+        Pet saved = petService.save(pet);
 
-        return ResponseEntity.created(URI.create("/pets/" + id)).build();
+        return ResponseEntity.created(URI.create("/pets/" + saved.getId())).build();
     }
 
     @PutMapping("/pets/{id}")
     public synchronized void updatePet(@PathVariable Integer id,
                                        @RequestBody Pet pet) {
-        pets.put(id, pet);
+
+        pet.setId(id);
+        petService.save(pet);
     }
 
     @DeleteMapping("/pets/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePet(@PathVariable Integer id) {
-        if(!pets.containsKey(id)){
-            throw new NoSuchPetException();
-        }
-        pets.remove(id);
+
+        petService.delete(id)
+                .orElseThrow(NoSuchPetException::new);
+
     }
 
-    private Predicate<Pet> filterByScpecie(String specie) {
-        return pet -> pet.getSpecie().equals(specie);
-    }
 }
 
