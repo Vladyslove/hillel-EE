@@ -1,13 +1,9 @@
 package hillelee.doctor;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Predicate;
@@ -16,22 +12,22 @@ import java.util.stream.Collectors;
 @RestController
 public class DoctorController {
 
-    private Map<Integer, Doctor> doctors = new HashMap<Integer, Doctor>() {{
-        put(25, new Doctor(25, "John Doe", "Dentist"));
-        put(50, new Doctor(50, "Jane Roe", "Therapist"));
-        put(100, new Doctor(100, "Drake Ramore", "Surgeon"));
-    }};
+    private Map<Integer, Doctor> doctors = new HashMap<>();
 
-    private Integer counter = doctors.size();
+    {
+        addDoctor(new Doctor(createId(),"John Doe", "Dentist"));
+        addDoctor(new Doctor(createId(),"Jane Roe", "Therapist"));
+        addDoctor(new Doctor(createId(),"Drake Ramore", "Surgeon"));
+    }
 
     @PostMapping("/doctors")
     public ResponseEntity<? /*super Doctor*/> createDoctor(@RequestBody Doctor doctor) {
-
+        if (doctor.getId() == null) doctor.setId(createId());
         if (doctors.containsKey(doctor.getId())) {
             return ResponseEntity.badRequest().build();
         }
-        doctors.put(++counter, doctor);
-        return ResponseEntity.created(URI.create("doctors/" + counter)).build();
+        doctors.put(doctor.getId(), doctor);
+        return ResponseEntity.created(URI.create("doctors/" + doctor.getId())).build();
     }
 
     @GetMapping("/doctors/{id}")
@@ -85,17 +81,14 @@ public class DoctorController {
         }
         doctors.remove(id);
     }
+
+    private void addDoctor(Doctor doctor) {
+        doctors.put(doctor.getId(), doctor);
+    }
+
+    private Integer createId() {
+        return new Random().nextInt(100000);
+
+    }
 }
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "There is no doctor with such number"  )
-class NoSuchDoctorException extends RuntimeException {
-}
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Doctor {
-    private Integer id;
-    private String name;
-    private String specialisation;
-}
