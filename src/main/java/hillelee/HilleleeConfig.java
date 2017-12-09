@@ -19,6 +19,9 @@ public class HilleleeConfig {
     @Bean
     CommandLineRunner initDb(JpaPetRepository repository){
         return args -> {
+            if (!repository.findAll().isEmpty()){
+                return;
+            }
             repository.save(new Pet( "Tom", "Cat", 3));
             repository.save(new Pet( "Jerry", "Mouse", 1));
         };
