@@ -1,101 +1,74 @@
 package hillelee.doctor;
 
+import hillelee.Config;
+import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
+import javax.security.auth.login.Configuration;
 import java.net.URI;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 public class DoctorController {
 
-    private Map<Integer, Doctor> doctors = new HashMap<Integer, Doctor>() {{
-        put(25, new Doctor(25, "John Doe", "Dentist"));
-        put(50, new Doctor(50, "Jane Roe", "Therapist"));
-        put(100, new Doctor(100, "Drake Ramore", "Surgeon"));
-    }};
+    private final Config config;
 
-    private Integer counter = doctors.size();
-
-    @PostMapping("/doctors")
-    public ResponseEntity<? /*super Doctor*/> createDoctor(@RequestBody Doctor doctor) {
-
-        if (doctors.containsKey(doctor.getId())) {
-            return ResponseEntity.badRequest().build();
-        }
-        doctors.put(++counter, doctor);
-        return ResponseEntity.created(URI.create("doctors/" + counter)).build();
-    }
+    private final DoctorService doctorService;
 
     @GetMapping("/doctors/{id}")
-    public ResponseEntity<? super Doctor> getDoctorById(@PathVariable Integer id) {
-        if (!doctors.containsKey(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(doctors.get(id));
+    public ResponseEntity<?> getDoctorById(@PathVariable Integer id) {
+        Optional<Doctor> mayBeDoctor = doctorService.getDoctorByID(id);
+
+        return mayBeDoctor.map(Object.class::cast)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest()
+                        .body(new ErrorBody("there is no pet with ID = " + id)));
+
     }
 
     @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam Optional<String> specialisation,
                                    @RequestParam Optional<String> name) {
-
-        Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
-                .orElse(doctor -> true);
-        Predicate<Doctor> nameFilter = name.map(this::filterByName).
-                orElse(doctor -> true);
-        Predicate<Doctor> complexFilter = specialisationFilter.and(nameFilter);
-
-        return doctors.values().stream()
-                .filter(complexFilter)
-                .collect(Collectors.toList());
+        return doctorService.getDoctors(name, specialisation);
     }
-    private Predicate<Doctor> filterBySpecialisation (String specialisation){
-        return doctor -> doctor.getSpecialisation().equals(specialisation);
-    }
-    private Predicate<Doctor> filterByName(String name) {
 
-        return doctor -> doctor.getName().equals(name);
+    @PostMapping("/doctors")
+    public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
+        Optional <Doctor> saved = doctorService.save(doctor);
+        if (saved.isPresent()) {
+           return ResponseEntity.created(URI.create("/doctors/" + saved.get().getId())).build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/doctors/{id}")
-    public ResponseEntity<? super Doctor> updateDoctor (@PathVariable Integer id,
+    public ResponseEntity<?> updateDoctor (@PathVariable Integer id,
                                                 @RequestBody Doctor doctor){
-        if (!doctors.containsKey(id)) {
+        Optional<Doctor> updated = doctorService.updateDoctor(id, doctor);
+
+        if (updated.isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
             return ResponseEntity.notFound().build();
         }
-        if (!Objects.equals(doctor.getId(), doctors.get(id).getId())){
-            return ResponseEntity.badRequest().body("ID changing is forbidden!");
-        }
-            doctors.put(id,doctor);
-            return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/doctors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctors(@PathVariable Integer id) {
-        if (!doctors.containsKey(id)) {
-            throw new NoSuchDoctorException();
-        }
-        doctors.remove(id);
+        doctorService.delete(id).orElseThrow(NoSuchDoctorException::new);
+    }
+
+    @GetMapping("/doctors/specializations")
+    public List<String> getSpecialization() {
+        return config.getSpecializations();
     }
 }
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "There is no doctor with such number"  )
-class NoSuchDoctorException extends RuntimeException {
-}
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Doctor {
-    private Integer id;
-    private String name;
-    private String specialisation;
-}
