@@ -57,7 +57,6 @@ public class PetController {
     @PutMapping("/pets/{id}")
     public synchronized void updatePet(@PathVariable Integer id,
                                        @RequestBody Pet pet) {
-
         pet.setId(id);
         petService.save(pet);
     }
