@@ -3,10 +3,12 @@ package hillelee.doctor;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class DoctorRepository {
-    private Map<Integer, Doctor> doctors = new HashMap<>();
+//    private Map<Integer, Doctor> doctors = new HashMap<>(); // also works
+    private Map<Integer, Doctor> doctors = new ConcurrentHashMap<>();
     {
         addDoctor(new Doctor(createId(),"John Doe", "Dentist"));
         addDoctor(new Doctor(createId(),"Jane Roe", "Therapist"));

@@ -1,23 +1,24 @@
 package hillelee.doctor;
 
+import hillelee.Config;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
-import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
+import javax.security.auth.login.Configuration;
 import java.net.URI;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
 public class DoctorController {
 
-    private DoctorService doctorService;
+    private Config config;
+
+    private final DoctorService doctorService;
 
     @GetMapping("/doctors/{id}")
     public ResponseEntity<?> getDoctorById(@PathVariable Integer id) {
@@ -35,7 +36,6 @@ public class DoctorController {
                                    @RequestParam Optional<String> name) {
         return doctorService.getDoctors(name, specialisation);
     }
-
 
     @PostMapping("/doctors")
     public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
@@ -63,6 +63,11 @@ public class DoctorController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctors(@PathVariable Integer id) {
         doctorService.delete(id).orElseThrow(NoSuchDoctorException::new);
+    }
+
+    @GetMapping("/doctors/specializations")
+    public List<String> getSpecialization() {
+        return config.getSpecializations();
     }
 }
 

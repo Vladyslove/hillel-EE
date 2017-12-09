@@ -29,7 +29,7 @@ public class DoctorService {
                 .collect(Collectors.toList());
     }
     private Predicate<Doctor> filterBySpecialisation (String specialisation){
-        return doctor -> doctor.getSpecialisation().equals(specialisation);
+        return doctor -> doctor.getSpecialization().equals(specialisation);
     }
     private Predicate<Doctor> filterByName(String name) {
 
