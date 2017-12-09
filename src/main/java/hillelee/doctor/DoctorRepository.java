@@ -36,4 +36,13 @@ public class DoctorRepository {
         doctors.put(doctor.getId(), doctor);
         return Optional.of(doctor);
     }
+
+    public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
+
+        if (!doctors.containsKey(id)) {
+            return Optional.empty();
+        }
+        doctors.put(id, doctor);
+        return Optional.of(doctor);
+    }
 }

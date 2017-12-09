@@ -41,23 +41,22 @@ public class DoctorController {
     public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
         Optional <Doctor> saved = doctorService.save(doctor);
         if (saved.isPresent()) {
-            ResponseEntity.created(URI.create("/doctors/" + saved.get().getId())).build();
+           return ResponseEntity.created(URI.create("/doctors/" + saved.get().getId())).build();
         } else {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/doctors/{id}")
-    public ResponseEntity<? super Doctor> updateDoctor (@PathVariable Integer id,
+    public ResponseEntity<?> updateDoctor (@PathVariable Integer id,
                                                 @RequestBody Doctor doctor){
-        if (!doctors.containsKey(id)) {
+        Optional<Doctor> updated = doctorService.updateDoctor(id, doctor);
+
+        if (updated.isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
             return ResponseEntity.notFound().build();
         }
-        if (!Objects.equals(doctor.getId(), doctors.get(id).getId())){
-            return ResponseEntity.badRequest().body("ID changing is forbidden!");
-        }
-            doctors.put(id,doctor);
-            return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/doctors/{id}")

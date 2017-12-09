@@ -40,4 +40,8 @@ public class DoctorService {
     public Optional <Doctor> save(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
+
+    public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
+        return doctorRepository.updateDoctor(id, doctor);
+    }
 }
