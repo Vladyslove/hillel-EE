@@ -40,7 +40,7 @@ public class DoctorRepository {
     }
 
     public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
-
+        if (!Objects.equals(id, doctor.getId())) throw new IdModificationIsForbidden();
         if (!doctors.containsKey(id)) {
             return Optional.empty();
         }

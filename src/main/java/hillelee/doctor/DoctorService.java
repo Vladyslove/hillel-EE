@@ -1,9 +1,11 @@
 package hillelee.doctor;
 
+import hillelee.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+    private final Config config;
 
     public Optional<Doctor> getDoctorByID(Integer id) {
         return doctorRepository.getDoctorByID(id);
@@ -38,11 +41,26 @@ public class DoctorService {
 
 
     public Optional <Doctor> save(Doctor doctor) {
+        confirmSpecialization(doctor);
         return doctorRepository.save(doctor);
     }
 
+    private void confirmSpecialization(Doctor doctor) {
+        if (!config.getSpecializations().contains(doctor.getSpecialization())) {
+            throw new UnconfirmedDoctorSpecialization("Specialization " + doctor.getSpecialization() +
+            "is forbidden (use '/doctors/specializations' endpoint to check permitted list");
+        }
+    }
+
     public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
+        confirmIdNotChanged(id, doctor);
         return doctorRepository.updateDoctor(id, doctor);
+    }
+
+    private void confirmIdNotChanged(Integer id, Doctor doctor) {
+        if (!Objects.equals(id, doctor.getId())) {
+            throw new IdChangingIsForbidden("Existing doctor ID changing is forbidden");
+        }
     }
 
     public Optional<Doctor> delete(Integer id) {

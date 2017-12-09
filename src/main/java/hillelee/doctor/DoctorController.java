@@ -3,6 +3,7 @@ package hillelee.doctor;
 import hillelee.Config;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DoctorController {
 
-    private Config config;
+    private final Config config;
 
     private final DoctorService doctorService;
 
