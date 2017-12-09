@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PetService {
-    private final PetRepository petRepository;
+    private final JpaPetRepository petRepository;
 
     public List<Pet> getPets(Optional<String> specie, Optional<Integer> age) {
         Predicate<Pet> specieFilter = specie.map(this::filterByScpecie)
@@ -42,6 +42,14 @@ public class PetService {
     }
 
     public Optional<Pet> delete(Integer id) {
-        return petRepository.delete(id);
+        Optional<Pet> mayBePet = petRepository.findById(id);
+        mayBePet.ifPresent(pet -> petRepository.delete(pet.getId()));
+
+/*
+        mayBePet.map(Pet::getId)
+                .ifPresent(petRepository::delete);
+*/
+
+        return mayBePet;
     }
 }
