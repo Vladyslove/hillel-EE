@@ -62,11 +62,7 @@ public class DoctorController {
     @DeleteMapping("/doctors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctors(@PathVariable Integer id) {
-        if (!doctors.containsKey(id)) {
-            throw new NoSuchDoctorException();
-        }
-        doctors.remove(id);
+        doctorService.delete(id).orElseThrow(NoSuchDoctorException::new);
     }
-
 }
 

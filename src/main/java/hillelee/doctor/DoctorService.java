@@ -44,4 +44,8 @@ public class DoctorService {
     public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
         return doctorRepository.updateDoctor(id, doctor);
     }
+
+    public Optional<Doctor> delete(Integer id) {
+        return doctorRepository.delete(id);
+    }
 }

@@ -45,4 +45,8 @@ public class DoctorRepository {
         doctors.put(id, doctor);
         return Optional.of(doctor);
     }
+
+    public Optional<Doctor> delete(Integer id) {
+        return Optional.ofNullable(doctors.remove(id));
+    }
 }
