@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorService {
-    private final DoctorRepository doctorRepository;
+    private final JpaDoctorRepository doctorRepository;
     private final Config config;
 
     public Optional<Doctor> getDoctorByID(Integer id) {
@@ -64,6 +65,16 @@ public class DoctorService {
     }
 
     public Optional<Doctor> delete(Integer id) {
-        return doctorRepository.delete(id);
+        Optional<Doctor> mayBeDoctor = doctorRepository.getDoctorByID(id);
+        mayBeDoctor.ifPresent(doctor -> doctorRepository.delete(doctor.getId()));
+
+        mayBeDoctor.map(Doctor::getId)
+                .ifPresent(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer id1) {
+                        doctorRepository.delete(id1);
+                    }
+                });
+        return mayBeDoctor;
     }
 }

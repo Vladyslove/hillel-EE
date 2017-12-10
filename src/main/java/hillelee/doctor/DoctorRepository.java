@@ -20,7 +20,7 @@ public class DoctorRepository {
     }
 
     private Integer createId() {
-        return new Random().nextInt(100000);
+        return new Random().nextInt(1_000_000);
     }
 
     public Optional<Doctor> getDoctorByID(Integer id) {
