@@ -40,7 +40,7 @@ public class DoctorController {
 
     @PostMapping("/doctors")
     public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
-        Optional <Doctor> saved = doctorService.save(doctor);
+        Optional <Doctor> saved = doctorService.saveDoctor(doctor);
         if (saved.isPresent()) {
            return ResponseEntity.created(URI.create("/doctors/" + saved.get().getId())).build();
         } else {

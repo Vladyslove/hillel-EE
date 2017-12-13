@@ -1,5 +1,7 @@
 package hillelee;
 
+import hillelee.doctor.Doctor;
+import hillelee.doctor.JpaDoctorRepository;
 import hillelee.pet.JpaPetRepository;
 import hillelee.pet.Pet;
 import hillelee.pet.PetService;
@@ -16,7 +18,7 @@ public class HilleleeConfig {
         return new PetService(petRepository);
     }
 
-    @Bean
+    /*@Bean
     CommandLineRunner initDb(JpaPetRepository repository){
         return args -> {
             if (!repository.findAll().isEmpty()){
@@ -24,6 +26,15 @@ public class HilleleeConfig {
             }
             repository.save(new Pet( "Tom", "Cat", 3));
             repository.save(new Pet( "Jerry", "Mouse", 1));
+        };
+    }*/
+
+    @Bean
+    CommandLineRunner initDb(JpaDoctorRepository repository) {
+        return args ->   {
+            repository.save(new Doctor("John Doe", "Dentist"));
+            repository.save(new Doctor("Jane Roe", "Therapist"));
+            repository.save(new Doctor("Drake Ramore", "Surgeon"));
         };
     }
 }
