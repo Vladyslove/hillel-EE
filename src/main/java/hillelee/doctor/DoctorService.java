@@ -40,9 +40,9 @@ public class DoctorService {
     }
 
 
-    public Optional <Doctor> saveDoctor(Doctor doctor) {
+    Doctor save(Doctor doctor) {
         confirmSpecialization(doctor);
-        return doctorRepository.saveDoctor(doctor);
+        return doctorRepository.save(doctor);
     }
 
     private void confirmSpecialization(Doctor doctor) {

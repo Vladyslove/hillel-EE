@@ -40,9 +40,11 @@ public class DoctorController {
 
     @PostMapping("/doctors")
     public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
-        Optional <Doctor> saved = doctorService.saveDoctor(doctor);
-        if (saved.isPresent()) {
-           return ResponseEntity.created(URI.create("/doctors/" + saved.get().getId())).build();
+        List <String> saved = (List<String>) doctorService.save(doctor);
+
+        if (doctor.getId() == null && saved.contains(doctor.getSpecialization())) {
+            Doctor created = doctorService.save(doctor);
+            return ResponseEntity.created(URI.create("/doctors/" + created.getId())).build();
         } else {
             return ResponseEntity.badRequest().build();
         }
