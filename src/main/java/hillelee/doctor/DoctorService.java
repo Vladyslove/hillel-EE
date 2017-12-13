@@ -43,6 +43,7 @@ public class DoctorService {
 
     public Optional <Doctor> save(Doctor doctor) {
         confirmSpecialization(doctor);
+        Optional<Doctor> savedDoctor = doctorRepository.ge
         return doctorRepository.save(doctor);
     }
 
@@ -69,12 +70,7 @@ public class DoctorService {
         mayBeDoctor.ifPresent(doctor -> doctorRepository.delete(doctor.getId()));
 
         mayBeDoctor.map(Doctor::getId)
-                .ifPresent(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer id1) {
-                        doctorRepository.delete(id1);
-                    }
-                });
+                .ifPresent(id1 -> doctorRepository.delete(id1));
         return mayBeDoctor;
     }
 }
