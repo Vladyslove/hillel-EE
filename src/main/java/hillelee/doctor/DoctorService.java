@@ -36,15 +36,13 @@ public class DoctorService {
         return doctor -> doctor.getSpecialization().equals(specialisation);
     }
     private Predicate<Doctor> filterByName(String name) {
-
         return doctor -> doctor.getName().equals(name);
     }
 
 
-    public Optional <Doctor> save(Doctor doctor) {
+    public Optional <Doctor> saveDoctor(Doctor doctor) {
         confirmSpecialization(doctor);
-        Optional<Doctor> savedDoctor = doctorRepository.ge
-        return doctorRepository.save(doctor);
+        return doctorRepository.saveDoctor(doctor);
     }
 
     private void confirmSpecialization(Doctor doctor) {

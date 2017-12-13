@@ -18,7 +18,7 @@ public class HilleleeConfig {
         return new PetService(petRepository);
     }
 
-    @Bean
+    /*@Bean
     CommandLineRunner initDb(JpaPetRepository repository){
         return args -> {
             if (!repository.findAll().isEmpty()){
@@ -27,7 +27,7 @@ public class HilleleeConfig {
             repository.save(new Pet( "Tom", "Cat", 3));
             repository.save(new Pet( "Jerry", "Mouse", 1));
         };
-    }
+    }*/
 
     @Bean
     CommandLineRunner initDb(JpaDoctorRepository repository) {
