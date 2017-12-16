@@ -1,12 +1,12 @@
 package hillelee.pet;
 
-import hillelee.converter.HibernateDateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -22,12 +22,18 @@ public class Pet {
     private Integer age;
 //    @Convert(converter = HibernateDateConverter.class)
     private LocalDate birthDate;
+    @OneToOne(cascade = CascadeType.ALL)
+    private MedicalCard medicalCard;
 
-    public Pet(String name, String specie, Integer age,  LocalDate birthDate) {
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Prescription> prescriptions;
+
+    public Pet(String name, String specie, Integer age,  LocalDate birthDate, MedicalCard medicalCard) {
         this.name = name;
         this.specie = specie;
         this.age = age;
         this.birthDate = birthDate;
+        this.medicalCard = medicalCard;
     }
 
     public Optional<String> getName() {
