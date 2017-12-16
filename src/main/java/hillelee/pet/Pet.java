@@ -1,13 +1,12 @@
 package hillelee.pet;
 
+import hillelee.converter.HibernateDateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Data
@@ -21,11 +20,14 @@ public class Pet {
     private String name;
     private String specie;
     private Integer age;
+//    @Convert(converter = HibernateDateConverter.class)
+    private LocalDate birthDate;
 
-    public Pet(String name, String specie, Integer age) {
+    public Pet(String name, String specie, Integer age,  LocalDate birthDate) {
         this.name = name;
         this.specie = specie;
         this.age = age;
+        this.birthDate = birthDate;
     }
 
     public Optional<String> getName() {
