@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
+
 @RequiredArgsConstructor
 public class PetService {
     private final JpaPetRepository petRepository;
@@ -38,8 +40,14 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age) {
-      return petRepository.findNullableBySpecieAndAge(specie.orElse(null), age.orElse(null));
+    @Transactional
+    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
+        List<Pet> nullableBySpecieAndAge = petRepository.findNullableBySpecieAndAge(specie.orElse(null),
+                age.orElse(null));
+
+        nullableBySpecieAndAge.forEach(pet -> System.out.println(pet.getPrescriptions()));
+
+        return nullableBySpecieAndAge;
     }
 
     private Predicate<Pet> filterByAge(Integer age) {

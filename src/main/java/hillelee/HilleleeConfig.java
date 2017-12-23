@@ -25,17 +25,17 @@ public class HilleleeConfig {
                 return;
             }
             List<Prescription> tomsPrescriptions = new ArrayList<>();
-            tomsPrescriptions.add(new Prescription("paracetamol", LocalDate.now(),3));
-            tomsPrescriptions.add(new Prescription("asperin", LocalDate.now(),3));
+            tomsPrescriptions.add(new Prescription("paracetatamol", LocalDate.now(), 3));
+            tomsPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
 
-            List<Prescription> jerryPrescriptions = new ArrayList<>();
-            jerryPrescriptions.add(new Prescription("paracetamol", LocalDate.now(),2));
-            jerryPrescriptions.add(new Prescription("asperin", LocalDate.now(),2));
+            List<Prescription> jerrysPrescriptions = new ArrayList<>();
+
+            jerrysPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
 
             MedicalCard tomsCard = new MedicalCard(LocalDate.now(), "bla-bla");
-            MedicalCard jerryCard = new MedicalCard(LocalDate.now(), "foo-bar");
-            repository.save(new Pet( "Tom", "Cat", 3, LocalDate.now(), tomsCard), tomsPrescriptions);
-            repository.save(new Pet( "Jerry", "Mouse", 1, LocalDate.now(), jerryCard), jerryPrescriptions);
+            MedicalCard jerrysCard = new MedicalCard(LocalDate.now(), "foo-bar");
+            repository.save(new Pet("Tom", "Cat", 3, LocalDate.now(), tomsCard, tomsPrescriptions));
+            repository.save(new Pet("Jerry", "Mouse", 1, LocalDate.now(), jerrysCard, jerrysPrescriptions));
         };
     }
 }
