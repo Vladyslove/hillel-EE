@@ -1,17 +1,16 @@
 package hillelee.pet;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import hillelee.store.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +85,7 @@ public class PetService {
     }
 
     @Transactional
-    @Retryable
+    @Retryable()
     public void prescribe(Integer petId,
                           String description,
                           String medicineName,

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -33,11 +34,17 @@ public class StoreService {
     }
 
     public void decrement(String medicineName, Integer quantity){
-        Medicine medicine = medicineRepository.findByName(medicineName)
-                                            .filter(m -> m.getQuantity() >= quantity)
-                                            .orElseThrow(NoSuchMedicineException::new);
+        log.warn("In decrement method" + Thread.currentThread().getName());
 
-        log.warn("In decrement method");
+        Optional<Medicine> byName = medicineRepository.findByName(medicineName);
+
+        log.warn("read version " + byName.get().getVersion());
+        Medicine medicine = byName
+                            .filter(m -> m.getQuantity() >= quantity)
+                            .orElseThrow(NoSuchMedicineException::new);
+        log.warn("before sleep");
+
+
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
