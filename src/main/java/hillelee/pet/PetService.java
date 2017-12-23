@@ -2,6 +2,7 @@ package hillelee.pet;
 
 import hillelee.store.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
@@ -85,7 +86,7 @@ public class PetService {
     }
 
     @Transactional
-    @Retryable()
+    @Retryable(ObjectOptimisticLockingFailureException.class)
     public void prescribe(Integer petId,
                           String description,
                           String medicineName,
