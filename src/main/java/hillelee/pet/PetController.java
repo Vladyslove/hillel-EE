@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import hillelee.pet.dto.PrescriptionInputDto;
+import hillelee.store.NoSuchMedicineException;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,5 +71,21 @@ public class PetController {
         log.error("error throws");
     }
 */
+
+    @PostMapping("/pets/{id}/prescription")
+    public void prescribe(@PathVariable Integer id,
+                          @RequestBody PrescriptionInputDto dto) {
+        petService.prescribe(id,
+                            dto.getDescription(),
+                            dto.getMedicineName(),
+                            dto.getQuantity(),
+                            dto.getTimesPerDay());
+
+    }
+
+    @ExceptionHandler(NoSuchMedicineException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void noSuchMedicine() {}
+
 }
 

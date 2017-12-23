@@ -1,17 +1,24 @@
 package hillelee.pet;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import hillelee.store.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@Service
 @RequiredArgsConstructor
 public class PetService {
     private final JpaPetRepository petRepository;
+    private final StoreService storeService;
+
 
     public List<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age) {
         if (specie.isPresent()&& age.isPresent()){
@@ -76,5 +83,23 @@ public class PetService {
 */
 
         return mayBePet;
+    }
+
+    @Transactional
+    @Retryable
+    public void prescribe(Integer petId,
+                          String description,
+                          String medicineName,
+                          Integer quantity,
+                          Integer timesPerDay) {
+
+        Pet pet = petRepository.findById(petId).orElseThrow(RuntimeException::new);
+
+        pet.getPrescriptions().add(new Prescription(description, LocalDate.now(), timesPerDay));
+
+        petRepository.save(pet);
+
+        storeService.decrement(medicineName, quantity);
+
     }
 }

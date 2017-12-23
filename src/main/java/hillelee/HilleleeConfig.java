@@ -1,6 +1,8 @@
 package hillelee;
 
 import hillelee.pet.*;
+import hillelee.store.Medicine;
+import hillelee.store.MedicineRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,11 @@ import java.util.List;
 @Configuration
 public class HilleleeConfig {
 
-    @Bean
+    /*@Bean
     PetService petService(JpaPetRepository petRepository){
 
         return new PetService(petRepository);
-    }
+    }*/
 
     @Bean
     CommandLineRunner initDb(JpaPetRepository repository){
@@ -38,4 +40,12 @@ public class HilleleeConfig {
             repository.save(new Pet("Jerry", "Mouse", 1, LocalDate.now(), jerrysCard, jerrysPrescriptions));
         };
     }
+
+    @Bean
+    CommandLineRunner initMedicineStore(MedicineRepository medicineRepository) {
+        return args -> {
+            medicineRepository.save(new Medicine("Brilliant green", 1));
+        };
+    }
+
 }

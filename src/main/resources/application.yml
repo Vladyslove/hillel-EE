@@ -6,10 +6,10 @@ spring:
     datasource:
         url: jdbc:postgresql:pet_clinic
         username: postgres
-        password: postgres
+        password: 123
 
     jackson:
-        property-naming-strategy: SNAKE_CASE
+#        property-naming-strategy: SNAKE_CASE
         serialization:
             write-dates-as-timestamps: false
             indent-output: true
