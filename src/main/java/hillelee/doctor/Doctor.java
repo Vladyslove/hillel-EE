@@ -25,4 +25,5 @@ public class Doctor {
         this.name = name;
         this.specialization = specialization;
     }
+
 }
