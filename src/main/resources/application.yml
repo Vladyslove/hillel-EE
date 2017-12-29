@@ -4,7 +4,8 @@ clinic-info:
 
 spring:
     datasource:
-        url: jdbc:postgresql:pet_clinic
+#        url: jdbc:postgresql:pet_clinic # for lessons
+        url: jdbc:postgresql://localhost:5433/pet_clinic # for hw
         username: postgres
         password: 123
 
@@ -14,7 +15,7 @@ spring:
             write-dates-as-timestamps: false
             indent-output: true
     jpa:
-        show-sql: true
+#        show-sql: true
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         hibernate.ddl-auto: create
         open-in-view: false

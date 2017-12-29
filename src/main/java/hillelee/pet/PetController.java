@@ -61,7 +61,6 @@ public class PetController {
 
         petService.delete(id)
                 .orElseThrow(NoSuchPetException::new);
-
     }
 
    /* // способ изменения Response Status
@@ -80,7 +79,6 @@ public class PetController {
                             dto.getMedicineName(),
                             dto.getQuantity(),
                             dto.getTimesPerDay());
-
     }
 
     @ExceptionHandler(NoSuchMedicineException.class)

@@ -47,5 +47,4 @@ public class HilleleeConfig {
             medicineRepository.save(new Medicine("Brilliant green", 1));
         };
     }
-
 }

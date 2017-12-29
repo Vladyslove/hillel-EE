@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class StoreController {
-
     private final StoreService storeService;
 
     @GetMapping("/medicine-store")
