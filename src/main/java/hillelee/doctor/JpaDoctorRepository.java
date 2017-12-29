@@ -11,7 +11,7 @@ public interface JpaDoctorRepository extends JpaRepository<Doctor, Integer> {
 
     @Query("SELECT doctor FROM Doctor AS doctor WHERE " +
             "(LOWER (doctor.name) LIKE :name% OR :name IS NULL) AND "  +
-            "(doctor.specialization IN :specializations OR :specializations IS NULL)")
+            "(doctor.specializations IN :specializations OR :specializations IS NULL)")
     List<Doctor> findByNameAndSpecialization(@Param("name") String name,
                                              @Param("specializations") List<String> specializations);
 

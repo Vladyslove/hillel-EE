@@ -51,7 +51,7 @@ public class DoctorController {
     }
 
     @GetMapping("/doctors/specializations")
-    public List<String> getSpecialization() {
+    public List<String> getSpecializations() {
         return config.getSpecializations();
     }
 }

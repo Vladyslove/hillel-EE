@@ -56,12 +56,12 @@ public class HilleleeConfig {
             spec1.add("therapist");
 
             List<String> spec2 = new ArrayList<>();
-            spec1.add("therapist");
-            spec1.add("surgeon");
+            spec2.add("therapist");
+            spec2.add("surgeon");
 
             List<String> spec3 = new ArrayList<>();
-            spec1.add("surgeon");
-            spec1.add("intern");
+            spec3.add("surgeon");
+            spec3.add("intern");
 
 
             if (!repository.findAll().isEmpty()) return;
