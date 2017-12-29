@@ -50,10 +50,24 @@ public class HilleleeConfig {
     @Bean
     CommandLineRunner initDoctors(JpaDoctorRepository repository) {
         return args -> {
+
+            List<String> spec1 = new ArrayList<>();
+            spec1.add("dentist");
+            spec1.add("therapist");
+
+            List<String> spec2 = new ArrayList<>();
+            spec1.add("therapist");
+            spec1.add("surgeon");
+
+            List<String> spec3 = new ArrayList<>();
+            spec1.add("surgeon");
+            spec1.add("intern");
+
+
             if (!repository.findAll().isEmpty()) return;
-            repository.save(new Doctor("John Doe", "Dentist"));
-            repository.save(new Doctor("Jane Roe", "Therapist"));
-            repository.save(new Doctor("Drake Ramore", "Surgeon"));
+            repository.save(new Doctor("John Doe", spec1));
+            repository.save(new Doctor("Jane Roe", spec2));
+            repository.save(new Doctor("Drake Ramore", spec3));
         };
     }
 

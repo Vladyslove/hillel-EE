@@ -1,4 +1,4 @@
-package hillelee;
+package hillelee.doctor;
 
 import hillelee.doctor.exceptions.DoctorAlreadyExistsException;
 import hillelee.doctor.exceptions.DoctorNotFoundException;
@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler{
+public class DoctorExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(value = UnconfirmedDoctorSpecializationException.class)
     public ResponseEntity<Object> HandleUnconfirmedSpecialization(RuntimeException ex, WebRequest request) {

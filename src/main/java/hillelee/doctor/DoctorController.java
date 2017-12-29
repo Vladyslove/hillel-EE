@@ -18,13 +18,18 @@ public class DoctorController {
     @GetMapping("/doctors/{id}")
     public Doctor getDoctorById(@PathVariable Integer id) {
         return doctorService.getDoctorByID(id);
-
     }
+
+    @GetMapping("/doctors/{id}/spec")
+    public List<String> getDoctorSpecializations(@PathVariable Integer id) {
+        return doctorService.getDoctorSpecializations(id);
+    }
+
 
     @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam (required = false)String name ,
-                                   @RequestParam (required = false) List <String> specialization) {
-        return doctorService.getDoctors(name, specialization);
+                                   @RequestParam (required = false) List <String> specializations) {
+        return doctorService.getDoctors(name, specializations);
     }
 
     @PostMapping("/doctors")

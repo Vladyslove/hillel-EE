@@ -20,12 +20,18 @@ public class DoctorService {
 
     public List<Doctor> getDoctors(String name, List<String> specialization) {
         if (name != null) name = name.toLowerCase();
-        return doctorRepository.findByNameAndSpecialization(name, specialization);
+//        return doctorRepository.findByNameAndSpecialization(name, specialization);
+        return doctorRepository.findAll();
     }
 
     public Doctor getDoctorByID(Integer id) {
         confirmNotExists(id);
         return doctorRepository.findOne(id);
+    }
+
+    public List<String> getDoctorSpecializations(Integer id) {
+//        return doctorRepository.getSpecializations(id);
+        return getDoctorByID(id).getSpecializations();
     }
 
     public Doctor createDoctor(Doctor doctor) {
@@ -47,7 +53,7 @@ public class DoctorService {
     }
 
     private void confirmSpecialization(Doctor doctor) {
-        if (!config.getSpecializations().contains(doctor.getSpecialization())) {
+        if (!config.getSpecializations().containsAll(doctor.getSpecializations())) {
             throw new UnconfirmedDoctorSpecializationException();
         }
     }
