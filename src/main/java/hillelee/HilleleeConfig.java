@@ -5,7 +5,9 @@ import hillelee.doctor.JpaDoctorRepository;
 import hillelee.pet.*;
 import hillelee.store.Medicine;
 import hillelee.store.MedicineRepository;
+import lombok.Getter;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@ConfigurationProperties(prefix = "clinic-info")
+@Getter
 public class HilleleeConfig {
+    private List<String> specializations = new ArrayList<>();
 
     /*@Bean
     PetService petService(JpaPetRepository petRepository){
-
         return new PetService(petRepository);
     }*/
 

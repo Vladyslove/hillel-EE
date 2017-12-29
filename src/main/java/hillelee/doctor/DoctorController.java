@@ -1,24 +1,17 @@
 package hillelee.doctor;
 
-import hillelee.Config;
-import hillelee.util.ErrorBody;
-import lombok.AllArgsConstructor;
+import hillelee.HilleleeConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
-import javax.security.auth.login.Configuration;
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class DoctorController {
 
-    private final Config config;
+    private final HilleleeConfig config;
 
     private final DoctorService doctorService;
 
@@ -30,8 +23,8 @@ public class DoctorController {
 
     @GetMapping("/doctors")
     public List<Doctor> getDoctors(@RequestParam (required = false)String name ,
-                                   @RequestParam (required = false) List <String> specialisation) {
-        return doctorService.getDoctors(name, specialisation);
+                                   @RequestParam (required = false) List <String> specialization) {
+        return doctorService.getDoctors(name, specialization);
     }
 
     @PostMapping("/doctors")
