@@ -23,17 +23,14 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping("/doctors/{id}")
-    public ResponseEntity<?> getDoctorById(@PathVariable Integer id) {
-        Doctor doctor = doctorService.getDoctorByID(id);
-
-        if (doctor == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(doctor);
+    public Doctor getDoctorById(@PathVariable Integer id) {
+        return doctorService.getDoctorByID(id);
 
     }
 
     @GetMapping("/doctors")
-    public List<Doctor> getDoctors(@RequestParam (required = false)String specialisation,
-                                   @RequestParam (required = false) String name) {
+    public List<Doctor> getDoctors(@RequestParam (required = false)String name ,
+                                   @RequestParam (required = false) List <String> specialisation) {
         return doctorService.getDoctors(name, specialisation);
     }
 

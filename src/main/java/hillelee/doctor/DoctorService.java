@@ -18,7 +18,8 @@ public class DoctorService {
     private final Config config;
     private final JpaDoctorRepository doctorRepository;
 
-    public List<Doctor> getDoctors(String name, String specialisation) {
+    public List<Doctor> getDoctors(String name, List<String> specialisation) {
+        if (name != null) name = name.toLowerCase();
         return doctorRepository.findByNameAndSpecialisation(name, specialisation);
     }
 
