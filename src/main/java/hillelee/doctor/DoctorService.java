@@ -17,35 +17,13 @@ public class DoctorService {
 
     private final Config config;
     private final JpaDoctorRepository doctorRepository;
-    //    private final DoctorRepository doctorRepository;
 
-    /*public List<Doctor> getDoctors(Optional<String> name, Optional<String> specialisation) {
-        Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
-                .orElse(doctor -> true);
-        Predicate<Doctor> nameFilter = name.map(this::filterByName).
-                orElse(doctor -> true);
-        Predicate<Doctor> complexFilter = specialisationFilter.and(nameFilter);
-
-        return doctorRepository.findAll().stream()
-                .filter(complexFilter)
-                .collect(Collectors.toList());
-    }*/
-
-    public List<Doctor> getDoctors(Optional<String>name, Optional<String> specialisation) {
-        return doctorRepository.findByNameAndSpecialisation(name.orElse(null), specialisation.orElse(null));
+    public List<Doctor> getDoctors(String name, String specialisation) {
+        return doctorRepository.findByNameAndSpecialisation(name, specialisation);
     }
 
-    /*private Predicate<Doctor> filterByName(String name) {
-        return doctor -> doctor.getName().equals(name);
-    }
-
-    private Predicate<Doctor> filterBySpecialisation (String specialisation){
-        return doctor -> doctor.getSpecialization().equals(specialisation);
-    }*/
-
-
-    public Optional<Doctor> getDoctorByID(Integer id) {
-        return doctorRepository.findById(id);
+    public Doctor getDoctorByID(Integer id) {
+        return doctorRepository.findOne(id);
     }
 
     public Doctor createDoctor(Doctor doctor) {
@@ -59,10 +37,8 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public Optional<Doctor> deleteDoctor(Integer id) {
-        Optional<Doctor> mayBeDoctor = doctorRepository.findById(id);
-        mayBeDoctor.ifPresent(doctor -> doctorRepository.delete(doctor.getId()));
-        return mayBeDoctor;
+    public void deleteDoctor(Integer id) {
+        doctorRepository.delete(id);
     }
 
     private void confirmSpecialization(Doctor doctor) {
