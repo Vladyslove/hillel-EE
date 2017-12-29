@@ -1,9 +1,13 @@
 package hillelee;
 
+import hillelee.doctor.Doctor;
+import hillelee.doctor.JpaDoctorRepository;
 import hillelee.pet.*;
 import hillelee.store.Medicine;
 import hillelee.store.MedicineRepository;
+import lombok.Getter;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,16 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@ConfigurationProperties(prefix = "clinic-info")
+@Getter
 public class HilleleeConfig {
+    private List<String> specializations = new ArrayList<>();
 
     /*@Bean
     PetService petService(JpaPetRepository petRepository){
-
         return new PetService(petRepository);
     }*/
 
     @Bean
-    CommandLineRunner initDb(JpaPetRepository repository){
+    CommandLineRunner initPets(JpaPetRepository repository){
         return args -> {
             if (!repository.findAll().isEmpty()){
                 return;
@@ -38,6 +44,16 @@ public class HilleleeConfig {
             MedicalCard jerrysCard = new MedicalCard(LocalDate.now(), "foo-bar");
             repository.save(new Pet("Tom", "Cat", 3, LocalDate.now(), tomsCard, tomsPrescriptions));
             repository.save(new Pet("Jerry", "Mouse", 1, LocalDate.now(), jerrysCard, jerrysPrescriptions));
+        };
+    }
+
+    @Bean
+    CommandLineRunner initDoctors(JpaDoctorRepository repository) {
+        return args -> {
+            if (!repository.findAll().isEmpty()) return;
+            repository.save(new Doctor("John Doe", "Dentist"));
+            repository.save(new Doctor("Jane Roe", "Therapist"));
+            repository.save(new Doctor("Drake Ramore", "Surgeon"));
         };
     }
 
