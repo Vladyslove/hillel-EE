@@ -38,7 +38,7 @@ public class DoctorController {
         return doctorService.getDoctors(name, specialisation);
     }
 
-    @PostMapping("/doctors")
+    /*@PostMapping("/doctors")
     public ResponseEntity<? super Doctor> createDoctor(@RequestBody Doctor doctor) {
         Optional <Doctor> saved = doctorService.save(doctor);
         if (saved.isPresent()) {
@@ -58,12 +58,15 @@ public class DoctorController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     @DeleteMapping("/doctors/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDoctors(@PathVariable Integer id) {
-        doctorService.delete(id).orElseThrow(NoSuchDoctorException::new);
+    public ResponseEntity<?> deleteDoctor(@PathVariable Integer id) {
+        if (doctorService.deleteDoctor(id).isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/doctors/specializations")
