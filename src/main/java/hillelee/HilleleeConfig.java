@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 //@ConfigurationProperties(prefix = "clinic-info")
@@ -60,10 +62,13 @@ public class HilleleeConfig {
             spec3.add("surgeon");
             spec3.add("intern");
 
+            Map<Integer, Integer> hourToPetId = new ConcurrentHashMap<>();
+            hourToPetId.put(8, 2);
+            hourToPetId.put(9, 1);
+
             Schedule schedule1 = new Schedule();
             Schedule schedule2 = new Schedule();
             Schedule schedule3 = new Schedule();
-
 
             if (!repository.findAll().isEmpty()) return;
             repository.save(new Doctor("John Doe", spec1, schedule1));

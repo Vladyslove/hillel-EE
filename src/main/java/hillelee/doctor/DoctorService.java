@@ -53,6 +53,16 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
+    public void update(Integer id, Doctor doctor) {
+        Doctor updDoctor = doctorRepository.getOne(id);
+        if(!(updDoctor == null)){
+            updDoctor.setName(doctor.getName());
+            updDoctor.setSpecializations(doctor.getSpecializations());
+            updDoctor.setSchedule(doctor.getSchedule());
+            doctorRepository.saveAndFlush(updDoctor);
+        }
+    }
+
     public void deleteDoctor(Integer id) {
         confirmNotExists(id);
         doctorRepository.delete(id);
