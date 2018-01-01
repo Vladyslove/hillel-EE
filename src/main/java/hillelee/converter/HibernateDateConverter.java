@@ -9,7 +9,8 @@ import java.time.LocalDate;
  * Created by JavaEE on 16.12.2017.
  */
 
-//@Converter(autoApply = true)
+//@Converter(autoApply = true) // we say to Hiber: "If you need to convert sqlDate in LocalDate use this converter(class)
+    // autoApply - is not good because it uses for all fields
 public class HibernateDateConverter implements AttributeConverter<LocalDate, Date> {
 
     @Override

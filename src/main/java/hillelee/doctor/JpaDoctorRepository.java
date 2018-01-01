@@ -18,9 +18,9 @@ public interface JpaDoctorRepository extends JpaRepository<Doctor, Integer> {
     List<Doctor> findByNameAndSpecialization(@Param("name") String name,
                                              @Param("specializations") List<String> specializations);*/
 
-    @Query("SELECT DISTINCT doctor FROM Doctor AS doctor JOIN doctor.specializations s " +
+    @Query("SELECT DISTINCT doctor FROM Doctor AS doctor JOIN doctor.specializations s \n" +
             " WHERE (s IN :specializations OR :specializations IS NULL) \n" +
-            " AND ((LOWER(doctor.name) LIKE :name) OR :name IS NULL) \n" +
+            " AND (LOWER(doctor.name) = LOWER(cast(:name as text)) OR :name IS NULL) \n" +
             " ORDER BY doctor.id ")
     List<Doctor> findByNameAndSpecialization(@Param("name") String name,
                                                      @Param("specializations")List<String> specializations);

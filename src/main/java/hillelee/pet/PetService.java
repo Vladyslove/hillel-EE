@@ -47,7 +47,7 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional // чтобы транзакция была в сервисе, а не в репо; работает только на бинах спринга
     public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
         List<Pet> nullableBySpecieAndAge = petRepository.findNullableBySpecieAndAge(specie.orElse(null),
                 age.orElse(null));
