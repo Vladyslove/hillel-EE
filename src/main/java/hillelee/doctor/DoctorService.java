@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,10 @@ public class DoctorService {
         if (name != null) name = name.toLowerCase();
 //        return doctorRepository.findByNameAndSpecialization(name, specialization);
         return doctorRepository.findAll();
+    }
+
+    public List<Doctor> getDoctorsUsingSingleJpaMethods(Optional<String> name, Optional<List<String>> specialization) {
+        return doctorRepository.findByNameAndSpecialization(name.orElse(null), specialization.orElse(null));
     }
 
     public Doctor getDoctorByID(Integer id) {
@@ -74,5 +79,13 @@ public class DoctorService {
         if (doctorRepository.exists(id)) {
             throw new DoctorAlreadyExistsException();
         }
+    }
+
+    public boolean exists(Integer id) {
+       return doctorRepository.exists(id);
+    }
+
+    public Optional<Doctor> getById(Integer id) {
+        return doctorRepository.findById(id);
     }
 }

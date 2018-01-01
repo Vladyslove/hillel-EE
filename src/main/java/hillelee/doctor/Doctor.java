@@ -17,13 +17,16 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-
+    @Column
     @Convert(converter = StringListConverter.class)
     private List<String> specializations;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Schedule schedule;
 
-    public Doctor(String name, List<String> specializations) {
+    public Doctor(String name, List<String> specializations, Schedule schedule) {
         this.name = name;
         this.specializations = specializations;
+        this.schedule = schedule;
     }
 
 }

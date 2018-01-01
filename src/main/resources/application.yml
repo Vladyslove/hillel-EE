@@ -22,7 +22,7 @@ spring:
     jpa:
 #        show-sql: true
         database-platform: org.hibernate.dialect.PostgreSQLDialect
-        hibernate.ddl-auto: update  #DROP and CREATE database in production 'validate'
+        hibernate.ddl-auto: create  #DROP and CREATE database in production 'validate'
         open-in-view: false
 
 #logging.level.org.hibernate: DEBUG

@@ -2,6 +2,7 @@ package hillelee;
 
 import hillelee.doctor.Doctor;
 import hillelee.doctor.JpaDoctorRepository;
+import hillelee.doctor.Schedule;
 import hillelee.pet.*;
 import hillelee.store.Medicine;
 import hillelee.store.MedicineRepository;
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "clinic-info")
+//@ConfigurationProperties(prefix = "clinic-info")
+@ConfigurationProperties("doctor")
 @Getter
 public class HilleleeConfig {
     private List<String> specializations = new ArrayList<>();
@@ -63,11 +65,15 @@ public class HilleleeConfig {
             spec3.add("surgeon");
             spec3.add("intern");
 
+            Schedule schedule1 = new Schedule();
+            Schedule schedule2 = new Schedule();
+            Schedule schedule3 = new Schedule();
+
 
             if (!repository.findAll().isEmpty()) return;
-            repository.save(new Doctor("John Doe", spec1));
-            repository.save(new Doctor("Jane Roe", spec2));
-            repository.save(new Doctor("Drake Ramore", spec3));
+            repository.save(new Doctor("John Doe", spec1, schedule1));
+            repository.save(new Doctor("Jane Roe", spec2, schedule2));
+            repository.save(new Doctor("Drake Ramore", spec3, schedule3));
         };
     }
 
