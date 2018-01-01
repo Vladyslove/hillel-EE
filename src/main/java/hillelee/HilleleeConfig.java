@@ -23,11 +23,6 @@ import java.util.List;
 public class HilleleeConfig {
     private List<String> specializations = new ArrayList<>();
 
-    /*@Bean
-    PetService petService(JpaPetRepository petRepository){
-        return new PetService(petRepository);
-    }*/
-
     @Bean
     CommandLineRunner initPets(JpaPetRepository repository){
         return args -> {

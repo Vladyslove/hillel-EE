@@ -17,7 +17,6 @@ public class DoctorController {
 
     private final HilleleeConfig config;
     private final DoctorService doctorService;
-    private Schedule schedule;
 
     @GetMapping("/doctors/{id}")
     public Doctor getDoctorById(@PathVariable Integer id) {
@@ -49,7 +48,7 @@ public class DoctorController {
             return doctorService.createDoctor(doctor);
     }
 
-    @PostMapping("/doctors/{id}/schedule/{date}/{recordingTime}")
+    /*@PostMapping("/doctors/{id}/schedule/{date}/{recordingTime}")
     public ResponseEntity<Void> recordingToDoctor(@PathVariable Integer id,
                                                   @PathVariable LocalDate date,
                                                   @PathVariable Integer recordingTime,
@@ -62,7 +61,7 @@ public class DoctorController {
         Optional<Doctor> doctor = doctorService.getById(id);
         schedule = doctor.get().getSchedule();
         return ResponseEntity.created(URI.create("doctors/" + id + "/schedule/" + date + "/" + petId)).build();
-    }
+    }*/
     @PutMapping("/doctors/{id}")
     public Doctor updateDoctor (@PathVariable Integer id,
                              @RequestBody Doctor doctor){

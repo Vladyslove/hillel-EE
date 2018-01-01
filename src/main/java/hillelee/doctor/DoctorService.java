@@ -36,7 +36,8 @@ public class DoctorService {
 
     public List<String> getDoctorSpecializations(Integer id) {
 //        return doctorRepository.getSpecializations(id);
-        return getDoctorByID(id).getSpecializations();
+//        return getDoctorByID(id).getSpecializations();
+        return config.getSpecializations();
     }
 
     public Doctor createDoctor(Doctor doctor) {

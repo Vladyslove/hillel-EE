@@ -12,19 +12,19 @@ public interface JpaDoctorRepository extends JpaRepository<Doctor, Integer> {
 
     Optional<Doctor> findById(Integer id);
 
-    //    @Query("SELECT doctor FROM Doctor AS doctor WHERE " +
-//        "(LOWER(doctor.name) LIKE :name% OR :name IS NULL) AND :specializations IS NULL)")
-
-//    List<Doctor> findByNameAndSpecialization(@Param("name") String name,
-
-    @Query("SELECT doctor FROM Doctor AS doctor WHERE " +
+    /*@Query("SELECT doctor FROM Doctor AS doctor WHERE " +
             "(LOWER (doctor.name) LIKE :name% OR :name IS NULL) AND "  +
             "(doctor.specializations s WHERE s IN :specializations OR :specializations IS NULL)")
     List<Doctor> findByNameAndSpecialization(@Param("name") String name,
-                                             @Param("specializations") List<String> specializations);
+                                             @Param("specializations") List<String> specializations);*/
 
-//                                          @Param("specializations") List<String> specializations);
+    @Query("SELECT DISTINCT doctor FROM Doctor AS doctor JOIN doctor.specializations s " +
+            " WHERE (s IN :specializations OR :specializations IS NULL) \n" +
+            " AND ((LOWER(doctor.name) LIKE :name) OR :name IS NULL) \n" +
+            " ORDER BY doctor.id ")
+    List<Doctor> findByNameAndSpecialization(@Param("name") String name,
+                                                     @Param("specializations")List<String> specializations);
 
-    @Query("SELECT doctor.specializations FROM Doctor AS doctor WHERE doctor.id = :id)")
-    List<String> getSpecializations(@Param("id") Integer id);
+/*    @Query("SELECT doctor.specializations FROM Doctor AS doctor WHERE doctor.id = :id)")
+    List<String> getSpecializations(@Param("id") Integer id);*/
 }
