@@ -2,6 +2,7 @@ package hillelee.pet.dto;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -19,6 +20,7 @@ public class PrescriptionInputDto {
     private LocalDate start;
     @Min(1)
     @Max(12)
+//    @Range(min = 1, max = 12)
     @NotNull
     private Integer timesPerDay;
     @NotEmpty
