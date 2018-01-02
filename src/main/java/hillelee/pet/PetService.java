@@ -96,7 +96,7 @@ public class PetService {
 
         Pet pet = petRepository.findById(petId).orElseThrow(RuntimeException::new);
 
-        pet.getPrescriptions().add(new Prescription(description, LocalDate.now(), timesPerDay));
+        pet.getPrescriptions().add(new Prescription(description, LocalDate.now(), timesPerDay, MedicineType.PERORAL));
 
         petRepository.save(pet);
 

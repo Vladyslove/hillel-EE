@@ -32,12 +32,12 @@ public class HilleleeConfig {
                 return;
             }
             List<Prescription> tomsPrescriptions = new ArrayList<>();
-            tomsPrescriptions.add(new Prescription("paracetatamol", LocalDate.now(), 3));
-            tomsPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
+            tomsPrescriptions.add(new Prescription("paracetatamol", LocalDate.now(), 3, MedicineType.PERORAL));
+            tomsPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3, MedicineType.PERORAL));
 
             List<Prescription> jerrysPrescriptions = new ArrayList<>();
 
-            jerrysPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
+            jerrysPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3, MedicineType.PERORAL));
 
             MedicalCard tomsCard = new MedicalCard(LocalDate.now(), "bla-bla");
             MedicalCard jerrysCard = new MedicalCard(LocalDate.now(), "foo-bar");
