@@ -86,7 +86,8 @@ public class PetService {
     }
 
     @Transactional
-    @Retryable(ObjectOptimisticLockingFailureException.class)
+        @Retryable(ObjectOptimisticLockingFailureException.class /*There is no reason to retry
+        another time this method if we don't have enough amount of medicine*/)
     public void prescribe(Integer petId,
                           String description,
                           String medicineName,

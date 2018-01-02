@@ -21,6 +21,8 @@ spring:
             indent-output: true # for java.time
     jpa:
 #        show-sql: true
+#        format-sql: true # from habrahabr - for performance parsing
+#        use-sql-comments: true # from habrahabr - for performance parsing
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         hibernate.ddl-auto: create  #DROP and CREATE database in production 'validate'
         open-in-view: false # по умолчанию тру, но мы хотим чтобы все операции с БД были явными(и чтобы сессия с БД закрывалась).
