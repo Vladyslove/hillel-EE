@@ -1,5 +1,6 @@
 package hillelee.pet.dto;
 
+import hillelee.validator.LatinName;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
@@ -24,6 +25,7 @@ public class PrescriptionInputDto {
     @NotNull
     private Integer timesPerDay;
     @NotEmpty
+    @LatinName
     private String medicineName;
     @NotNull
     @Min(1)

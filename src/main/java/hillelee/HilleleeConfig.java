@@ -80,7 +80,7 @@ public class HilleleeConfig {
     @Bean
     CommandLineRunner initMedicineStore(MedicineRepository medicineRepository) {
         return args -> {
-            medicineRepository.save(new Medicine("Brilliant green", 1));
+            medicineRepository.save(new Medicine("Brilliantum greenus", 1));
         };
     }
 }
