@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @AllArgsConstructor
 public class PetController {
@@ -30,7 +32,7 @@ public class PetController {
                              @RequestParam Optional<Integer> age,
                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> birthDate) {
 
-        return petService.getPetsUsingSingleJpaMethod(specie, age, birthDate);
+        return petService.getPetsUsingSingleJpaMethod(specie, age);
     }
 
     @GetMapping("/pets/{id}")
@@ -76,7 +78,8 @@ public class PetController {
 
     @PostMapping("/pets/{id}/prescription")
     public void prescribe(@PathVariable Integer id,
-                          @RequestBody PrescriptionInputDto dto) {
+                          @Valid /*чтобы заработали параметры в классе PrescriptionInputDto
+                                 */ @RequestBody PrescriptionInputDto dto) {
         petService.prescribe(id,
                             dto.getDescription(),
                             dto.getMedicineName(),

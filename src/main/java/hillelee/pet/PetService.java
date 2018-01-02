@@ -48,10 +48,9 @@ public class PetService {
     }
 
     @Transactional // чтобы транзакция была в сервисе, а не в репо; работает только на бинах спринга
-    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age, Optional<LocalDate> birthDate){
+    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
         List<Pet> nullableBySpecieAndAge = petRepository.findNullableBySpecieAndAge(specie.orElse(null),
-                age.orElse(null),
-                birthDate.orElse(null));
+                age.orElse(null));
 
         nullableBySpecieAndAge.forEach(pet -> System.out.println(pet.getPrescriptions()));
 

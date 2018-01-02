@@ -39,11 +39,10 @@ public class StoreService {
                             .orElseThrow(NoSuchMedicineException::new);
         log.warn("before sleep");
 
-        try {
-            TimeUnit.SECONDS.sleep(2);
+        /*try {
+            TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        }*/
         medicine.setQuantity(medicine.getQuantity() - quantity);
 
         medicineRepository.save(medicine);
