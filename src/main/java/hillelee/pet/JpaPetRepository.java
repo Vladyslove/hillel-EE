@@ -1,5 +1,6 @@
 package hillelee.pet;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,9 @@ public interface JpaPetRepository extends JpaRepository<Pet, Integer> {
 
     @Query("SELECT pet FROM Pet AS pet " +
             "WHERE (pet.specie = :specie OR :specie IS NULL)" +
-            "  AND (pet.age = :age OR :age IS NULL ) ")
+            "  AND (pet.age = :age OR :age IS NULL ) " +
+            "  AND (pet.birthDate = :birthDate OR :birthDate IS NULL ) ")
     List<Pet> findNullableBySpecieAndAge(@Param("specie") String specie,
-                                         @Param("age") Integer age);
+                                         @Param("age") Integer age,
+                                         @Param("birthDate")LocalDate birthDate);
 }
