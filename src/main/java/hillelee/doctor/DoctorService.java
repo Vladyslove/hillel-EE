@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,23 @@ public class DoctorService {
 
     public List<Doctor> getDoctors(String name, List<String> specialization) {
         if (name != null) name = name.toLowerCase();
-        return doctorRepository.findByNameAndSpecialization(name, specialization);
+//        return doctorRepository.findByNameAndSpecialization(name, specialization);
+        return doctorRepository.findAll();
+    }
+
+    public List<Doctor> getDoctorsUsingSingleJpaMethods(Optional<String> name, Optional<List<String>> specialization) {
+        return doctorRepository.findByNameAndSpecialization(name.orElse(null), specialization.orElse(null));
     }
 
     public Doctor getDoctorByID(Integer id) {
         confirmNotExists(id);
         return doctorRepository.findOne(id);
+    }
+
+    public List<String> getDoctorSpecializations(Integer id) {
+//        return doctorRepository.getSpecializations(id);
+//        return getDoctorByID(id).getSpecializations();
+        return config.getSpecializations();
     }
 
     public Doctor createDoctor(Doctor doctor) {
@@ -41,13 +53,23 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
+    public void update(Integer id, Doctor doctor) {
+        Doctor updDoctor = doctorRepository.getOne(id);
+        if(!(updDoctor == null)){
+            updDoctor.setName(doctor.getName());
+            updDoctor.setSpecializations(doctor.getSpecializations());
+            updDoctor.setSchedule(doctor.getSchedule());
+            doctorRepository.saveAndFlush(updDoctor);
+        }
+    }
+
     public void deleteDoctor(Integer id) {
         confirmNotExists(id);
         doctorRepository.delete(id);
     }
 
     private void confirmSpecialization(Doctor doctor) {
-        if (!config.getSpecializations().contains(doctor.getSpecialization())) {
+        if (!config.getSpecializations().containsAll(doctor.getSpecializations())) {
             throw new UnconfirmedDoctorSpecializationException();
         }
     }
@@ -68,5 +90,13 @@ public class DoctorService {
         if (doctorRepository.exists(id)) {
             throw new DoctorAlreadyExistsException();
         }
+    }
+
+    public boolean exists(Integer id) {
+       return doctorRepository.exists(id);
+    }
+
+    public Optional<Doctor> getById(Integer id) {
+        return doctorRepository.findById(id);
     }
 }

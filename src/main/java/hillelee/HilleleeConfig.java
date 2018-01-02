@@ -2,6 +2,7 @@ package hillelee;
 
 import hillelee.doctor.Doctor;
 import hillelee.doctor.JpaDoctorRepository;
+import hillelee.doctor.Schedule;
 import hillelee.pet.*;
 import hillelee.store.Medicine;
 import hillelee.store.MedicineRepository;
@@ -14,17 +15,15 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
-@ConfigurationProperties(prefix = "clinic-info")
+//@ConfigurationProperties(prefix = "clinic-info")
+@ConfigurationProperties("doctor")
 @Getter
 public class HilleleeConfig {
     private List<String> specializations = new ArrayList<>();
-
-    /*@Bean
-    PetService petService(JpaPetRepository petRepository){
-        return new PetService(petRepository);
-    }*/
 
     @Bean
     CommandLineRunner initPets(JpaPetRepository repository){
@@ -50,10 +49,31 @@ public class HilleleeConfig {
     @Bean
     CommandLineRunner initDoctors(JpaDoctorRepository repository) {
         return args -> {
+
+            List<String> spec1 = new ArrayList<>();
+            spec1.add("dentist");
+            spec1.add("therapist");
+
+            List<String> spec2 = new ArrayList<>();
+            spec2.add("therapist");
+            spec2.add("surgeon");
+
+            List<String> spec3 = new ArrayList<>();
+            spec3.add("surgeon");
+            spec3.add("intern");
+
+            Map<Integer, Integer> hourToPetId = new ConcurrentHashMap<>();
+            hourToPetId.put(8, 2);
+            hourToPetId.put(9, 1);
+
+            Schedule schedule1 = new Schedule();
+            Schedule schedule2 = new Schedule();
+            Schedule schedule3 = new Schedule();
+
             if (!repository.findAll().isEmpty()) return;
-            repository.save(new Doctor("John Doe", "Dentist"));
-            repository.save(new Doctor("Jane Roe", "Therapist"));
-            repository.save(new Doctor("Drake Ramore", "Surgeon"));
+            repository.save(new Doctor("John Doe", spec1, schedule1));
+            repository.save(new Doctor("Jane Roe", spec2, schedule2));
+            repository.save(new Doctor("Drake Ramore", spec3, schedule3));
         };
     }
 

@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DoctorRepository {
 //    private Map<Integer, Doctor> doctors = new HashMap<>(); // also works
     private Map<Integer, Doctor> doctors = new ConcurrentHashMap<>();
-    {
+    /*{
         addDoctor(new Doctor(createId(),"John Doe", "Dentist"));
         addDoctor(new Doctor(createId(),"Jane Roe", "Therapist"));
         addDoctor(new Doctor(createId(),"Drake Ramore", "Surgeon"));
-    }
+    }*/
 
     private void addDoctor(Doctor doctor) {
         doctors.put(doctor.getId(), doctor);

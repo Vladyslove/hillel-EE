@@ -47,7 +47,7 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional // чтобы транзакция была в сервисе, а не в репо; работает только на бинах спринга
     public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
         List<Pet> nullableBySpecieAndAge = petRepository.findNullableBySpecieAndAge(specie.orElse(null),
                 age.orElse(null));
@@ -86,7 +86,8 @@ public class PetService {
     }
 
     @Transactional
-    @Retryable(ObjectOptimisticLockingFailureException.class)
+        @Retryable(ObjectOptimisticLockingFailureException.class /*There is no reason to retry
+        another time this method if we don't have enough amount of medicine*/)
     public void prescribe(Integer petId,
                           String description,
                           String medicineName,
