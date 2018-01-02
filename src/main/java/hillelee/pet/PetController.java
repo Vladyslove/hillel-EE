@@ -2,13 +2,13 @@ package hillelee.pet;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import hillelee.pet.dto.PrescriptionInputDto;
 import hillelee.store.NoSuchMedicineException;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class PetController {
     }
 
     @GetMapping("/pets")
-    public List<Pet> getPets(@RequestParam Optional<String> specie,
+    public Page<Pet> getPets(@RequestParam Optional<String> specie,
                              @RequestParam Optional<Integer> age,
                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> birthDate,
                              Pageable pageable) {

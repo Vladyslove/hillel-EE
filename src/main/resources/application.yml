@@ -1,3 +1,5 @@
+# default profile. At first spring take this profile than ONE! other after "---"
+
 clinic-info:
   name: 'my clinic'
   working-hours: '8-17'
@@ -8,12 +10,6 @@ clinic-info:
         - intern
 
 spring:
-    datasource:
-#        url: jdbc:postgresql:pet_clinic # for lessons
-        url: jdbc:postgresql://localhost:5433/pet_clinic # for hw
-        username: postgres
-        password: 123
-
     jackson:
 #        property-naming-strategy: SNAKE_CASE
         serialization:
@@ -29,3 +25,19 @@ spring:
         # При тру - спринг на заднем фоне хранит сессию(возможность запрашивать данные у БД)  и может доставать коллекцию
 
 #logging.level.org.hibernate: DEBUG
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+  #        url: jdbc:postgresql:pet_clinic # for lessons
+      url: jdbc:postgresql://localhost:5433/pet_clinic # for hw
+      username: postgres
+      password: 123
+  jackson.serialization.indent-output: false # неформатированный JSON
+#  jpa.hibernate.ddl-auto: validate # валидировать какие таблицы есть в БД, соответствуют ли они по структуре
+
+---
+spring:
+  profiles: test
