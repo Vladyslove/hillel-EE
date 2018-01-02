@@ -26,7 +26,7 @@ public class Pet {
     // medicalCard - is not just a simple field but is table (@OneToOne says it)
     //@Fetch(FetchMode.JOIN)
     private MedicalCard medicalCard;
-    @OneToMany(cascade = CascadeType.ALL/*, fetch = FetchType.EAGER */ /*чтобы доставать коллекцию жадно, не lazy*/)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER  /*чтобы доставать коллекцию жадно, не lazy*/)
     //@Fetch(FetchMode.JOIN) // ставится над вложенным полем, чтобы сказать Хибернейту, что не нужно поле selectами вытаскивать
     // не работает - значит нужно указать это в @Query :"JOIN FETCH pet.prescriptions" и так же medicalCard
     private List<Prescription> prescriptions;

@@ -2,6 +2,9 @@ package hillelee.pet;
 
 import hillelee.store.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -20,17 +23,17 @@ public class PetService {
     private final StoreService storeService;
 
 
-    public List<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age) {
+    public Page<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age, Pageable pageable) {
         if (specie.isPresent()&& age.isPresent()){
-            petRepository.findBySpecieAndAge(specie.get(), age.get());
+            petRepository.findBySpecieAndAge(specie.get(), age.get(), pageable);
         }
         if (specie.isPresent()){
-            return petRepository.findBySpecie(specie.get());
+            return petRepository.findBySpecie(specie.get(), pageable);
         }
         if (age.isPresent()) {
-            return petRepository.findByAge(age.get());
+            return petRepository.findByAge(age.get(), pageable);
         }
-        return petRepository.findAll();
+        return petRepository.findAll(pageable);
     }
 
     public List<Pet> getPetUsingStreamFilters(Optional<String> specie, Optional<Integer> age) {

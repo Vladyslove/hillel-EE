@@ -9,6 +9,7 @@ import hillelee.pet.dto.PrescriptionInputDto;
 import hillelee.store.NoSuchMedicineException;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,10 @@ public class PetController {
     @GetMapping("/pets")
     public List<Pet> getPets(@RequestParam Optional<String> specie,
                              @RequestParam Optional<Integer> age,
-                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> birthDate) {
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> birthDate,
+                             Pageable pageable) {
 
-        return petService.getPetsUsingSingleJpaMethod(specie, age);
+        return petService.getPetsUsingSeparateJpaMethods(specie, age, pageable);
     }
 
     @GetMapping("/pets/{id}")
