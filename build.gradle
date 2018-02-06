@@ -31,6 +31,7 @@ dependencies {
     compile 'org.hibernate:hibernate-java8' // for saving in DB @Entity with field java.time(e.g. LocalDate)
     // also we can use custom Converter for dates with @Converter and @Convert
     compile 'org.springframework.retry:spring-retry' // spring за нас будет делать повторные попытки вызвать метод
+    compile group: 'com.google.guava', name: 'guava', version: '23.6-jre' // for reading .json
 
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     runtime('com.h2database:h2') // не имея credentials по Postgres(default profile), spring поключается к Н2
