@@ -34,6 +34,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '23.6-jre' // for reading .json
 
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile 'org.springframework.boot:spring-boot-starter-security'
     runtime('com.h2database:h2') // не имея credentials по Postgres(default profile), spring поключается к Н2
     runtime('org.postgresql:postgresql')
     compileOnly('org.projectlombok:lombok')
