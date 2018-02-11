@@ -1,24 +1,23 @@
  package hillelee.pet;
 
-import com.google.common.io.Resources;
-import hillelee.store.Medicine;
-import hillelee.store.MedicineRepository;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+ import com.google.common.io.Resources;
+ import hillelee.store.Medicine;
+ import hillelee.store.MedicineRepository;
+ import org.junit.After;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
+ import org.springframework.test.context.junit4.SpringRunner;
+ import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+ import java.io.IOException;
+ import java.nio.charset.Charset;
+ import java.time.LocalDate;
+ import java.util.List;
+ import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -39,7 +38,7 @@ public class PetControllerTest {
     @Autowired
     MedicineRepository medicineRepository;
     @Autowired
-    MockMvc mockMvc;
+    MockMvc  mockMvc;
 
     @After
     public void cleanUp() {
@@ -80,7 +79,15 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.id", is(id))) // вызывается не на Джававском объекте, а на JSONе, который на вернул Controller
                 .andExpect(jsonPath("$.name", is("Tom")))
                 .andExpect(jsonPath("$.*", hasSize(7)));
+        // $ - Грубо говоря ссылка на весь объект, который нам вернулся
+        // $.id - Вызывается не на Java-вском объекте, а на JSON-е, кот. вернул наш Controller
+        // $.* - проверяет количество полей
+    }
 
+    @Test
+    public void petNotFound() throws Exception {
+        mockMvc.perform(get("/pets/1"))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -135,9 +142,6 @@ public class PetControllerTest {
         assertFalse(maybePet.isPresent());
 
     }
-    private String readFile(String resourceName) throws IOException {
-        return Resources.toString(Resources.getResource(resourceName), Charset.defaultCharset());
-    }
 
     @Test
     public void prescribeMedicineTest() throws Exception { //@PostMapping("/pets/{id}/prescription")
@@ -157,11 +161,26 @@ public class PetControllerTest {
 
         assertThat(prescriptions, hasSize(1));
 
-        Medicine greenus = medicineRepository.findByName("Brilliantum greenus").get();
+        Medicine greenus = medicineRepository.findByName("Bri lliantum greenus").get();
 
         assertThat(greenus.getQuantity(), is(0));
+    }
 
+    @Test
+    public void notEnoughMedicine() throws Exception {
+        Integer id= petRepository.save(new Pet("Tom", "Cat", 3, LocalDate.now(), null, null)).
+                getId();
 
+        String body = readFile("prescription.json");
+
+        mockMvc.perform(post("pets/{id}/prescriptions", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    private String readFile(String resourceName) throws IOException {
+        return Resources.toString(Resources.getResource(resourceName), Charset.defaultCharset());
     }
 
 }
