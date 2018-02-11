@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @SpringBootApplication
 @EnableRetry
 @EnableWebSecurity
-
 public class HilleleeApplication {
 
 	public static void main(String[] args) {
