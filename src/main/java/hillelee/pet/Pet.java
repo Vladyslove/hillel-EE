@@ -19,6 +19,7 @@ public class Pet {
     private Integer id;
     private String name;
     private String specie;
+    private String test;
     private Integer age;
 //    @Convert(converter = HibernateDateConverter.class)
     private LocalDate birthDate;
