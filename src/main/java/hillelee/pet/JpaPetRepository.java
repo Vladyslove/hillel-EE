@@ -1,5 +1,7 @@
 package hillelee.pet;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,15 +12,15 @@ import java.util.Optional;
 public interface JpaPetRepository extends JpaRepository<Pet, Integer> {
     Optional<Pet> findById(Integer id);
 
-    List<Pet> findBySpecieAndAge(String specie, Integer integer);
+    Page<Pet> findBySpecieAndAge(String specie, Integer age, Pageable pageable);
 
-    List<Pet> findBySpecie(String specie);
+    Page<Pet> findBySpecie(String specie, Pageable pageable);
 
-    List<Pet> findByAge(Integer integer);
+    Page<Pet> findByAge(Integer integer, Pageable pageable);
 
-    @Query("SELECT pet FROM Pet As pet " +
+    @Query("SELECT pet FROM Pet AS pet " +
             "WHERE (pet.specie = :specie OR :specie IS NULL)" +
-            "   AND (pet.age = :age OR :age IS NULL ) ")
-    List<Pet>  findNullableBySpecieAndAge(@Param("specie") String specie,
-                                            @Param("age") Integer age);
+            "  AND (pet.age = :age OR :age IS NULL ) ")
+    List<Pet> findNullableBySpecieAndAge(@Param("specie") String specie,
+                                         @Param("age") Integer age);
 }

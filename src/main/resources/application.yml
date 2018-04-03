@@ -1,26 +1,43 @@
+# default profile. At first spring take this profile than ONE! other after "---"
+
 clinic-info:
   name: 'my clinic'
   working-hours: '8-17'
   specializations:
-      - Dentist
-      - Therapist
-      - Surgeon
-      - Intern
+        - dentist
+        - therapist
+        - surgeon
+        - intern
 
 spring:
-    datasource:
-        url: jdbc:postgresql:pet_clinic
-        username: postgres
-        password: 123
-
     jackson:
-        property-naming-strategy: SNAKE_CASE
+#        property-naming-strategy: SNAKE_CASE
         serialization:
-            write-dates-as-timestamps: false
-            indent-output: true
+            write-dates-as-timestamps: false # for java.time
+            indent-output: true # for java.time
     jpa:
-        show-sql: true
+#        show-sql: true
+#        format-sql: true # from habrahabr - for performance parsing
+#        use-sql-comments: true # from habrahabr - for performance parsing
         database-platform: org.hibernate.dialect.PostgreSQLDialect
-        hibernate.ddl-auto: create
+        hibernate.ddl-auto: create  #DROP and CREATE database in production 'validate'
+        open-in-view: false # по умолчанию тру, но мы хотим чтобы все операции с БД были явными(и чтобы сессия с БД закрывалась).
+        # При тру - спринг на заднем фоне хранит сессию(возможность запрашивать данные у БД)  и может доставать коллекцию
 
 #logging.level.org.hibernate: DEBUG
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+  #        url: jdbc:postgresql:pet_clinic # for lessons
+      url: jdbc:postgresql://localhost:5433/pet_clinic # for hw
+      username: postgres
+      password: 123
+  jackson.serialization.indent-output: false # неформатированный JSON
+#  jpa.hibernate.ddl-auto: validate # валидировать какие таблицы есть в БД, соответствуют ли они по структуре
+
+---
+spring:
+  profiles: test

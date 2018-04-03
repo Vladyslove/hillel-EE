@@ -1,14 +1,21 @@
 package hillelee.pet;
 
 import java.net.URI;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
 
+import hillelee.pet.dto.PrescriptionInputDto;
+import hillelee.store.NoSuchMedicineException;
 import hillelee.util.ErrorBody;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -22,10 +29,12 @@ public class PetController {
     }
 
     @GetMapping("/pets")
-    public List<Pet> getPets(@RequestParam Optional<String> specie,
-                             @RequestParam Optional<Integer> age) {
+    public Page<Pet> getPets(@RequestParam Optional<String> specie,
+                             @RequestParam Optional<Integer> age,
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> birthDate,
+                             Pageable pageable) {
 
-        return petService.getPetsUsingSingleJpaMethod(specie, age);
+        return petService.getPetsUsingSeparateJpaMethods(specie, age, pageable);
     }
 
     @GetMapping("/pets/{id}")
@@ -59,7 +68,6 @@ public class PetController {
 
         petService.delete(id)
                 .orElseThrow(NoSuchPetException::new);
-
     }
 
    /* // способ изменения Response Status
@@ -69,5 +77,21 @@ public class PetController {
         log.error("error throws");
     }
 */
+
+    @PostMapping("/pets/{id}/prescription")
+    public void prescribe(@PathVariable Integer id,
+                          @Valid /*чтобы заработали параметры в классе PrescriptionInputDto
+                                 */ @RequestBody PrescriptionInputDto dto) {
+        petService.prescribe(id,
+                            dto.getDescription(),
+                            dto.getMedicineName(),
+                            dto.getQuantity(),
+                            dto.getTimesPerDay());
+    }
+
+    @ExceptionHandler(NoSuchMedicineException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void noSuchMedicine() {}
+
 }
 

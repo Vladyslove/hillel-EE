@@ -1,27 +1,39 @@
 package hillelee.pet;
 
+import hillelee.store.StoreService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-
+@Service
 @RequiredArgsConstructor
 public class PetService {
     private final JpaPetRepository petRepository;
+    private final StoreService storeService;
 
-    public List<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age) {
+
+    public Page<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age, Pageable pageable) {
         if (specie.isPresent()&& age.isPresent()){
-            petRepository.findBySpecieAndAge(specie.get(), age.get());
+            petRepository.findBySpecieAndAge(specie.get(), age.get(), pageable);
         }
         if (specie.isPresent()){
-            return petRepository.findBySpecie(specie.get());
+            return petRepository.findBySpecie(specie.get(), pageable);
         }
         if (age.isPresent()) {
-            return petRepository.findByAge(age.get());
+            return petRepository.findByAge(age.get(), pageable);
         }
-        return petRepository.findAll();
+        return petRepository.findAll(pageable);
     }
 
     public List<Pet> getPetUsingStreamFilters(Optional<String> specie, Optional<Integer> age) {
@@ -38,8 +50,14 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age) {
-      return petRepository.findNullableBySpecieAndAge(specie.orElse(null), age.orElse(null));
+    @Transactional // чтобы транзакция была в сервисе, а не в репо; работает только на бинах спринга
+    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
+        List<Pet> nullableBySpecieAndAge = petRepository.findNullableBySpecieAndAge(specie.orElse(null),
+                age.orElse(null));
+
+        nullableBySpecieAndAge.forEach(pet -> System.out.println(pet.getPrescriptions()));
+
+        return nullableBySpecieAndAge;
     }
 
     private Predicate<Pet> filterByAge(Integer age) {
@@ -68,5 +86,24 @@ public class PetService {
 */
 
         return mayBePet;
+    }
+
+    @Transactional
+        @Retryable(ObjectOptimisticLockingFailureException.class /*There is no reason to retry
+        another time this method if we don't have enough amount of medicine*/)
+    public void prescribe(Integer petId,
+                          String description,
+                          String medicineName,
+                          Integer quantity,
+                          Integer timesPerDay) {
+
+        Pet pet = petRepository.findById(petId).orElseThrow(RuntimeException::new);
+
+        pet.getPrescriptions().add(new Prescription(description, LocalDate.now(), timesPerDay, MedicineType.PERORAL));
+
+        petRepository.save(pet);
+
+        storeService.decrement(medicineName, quantity);
+
     }
 }

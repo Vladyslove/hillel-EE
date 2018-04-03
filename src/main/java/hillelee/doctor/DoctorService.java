@@ -1,69 +1,102 @@
 package hillelee.doctor;
 
-import hillelee.Config;
+import hillelee.HilleleeConfig;
+import hillelee.doctor.exceptions.DoctorAlreadyExistsException;
+import hillelee.doctor.exceptions.DoctorNotFoundException;
+import hillelee.doctor.exceptions.IdModificationIsForbiddenException;
+import hillelee.doctor.exceptions.UnconfirmedDoctorSpecializationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorService {
-    private final DoctorRepository doctorRepository;
-    private final Config config;
 
-    public Optional<Doctor> getDoctorByID(Integer id) {
-        return doctorRepository.getDoctorByID(id);
+    private final HilleleeConfig config;
+    private final JpaDoctorRepository doctorRepository;
+
+    public List<Doctor> getDoctors(String name, List<String> specialization) {
+        if (name != null) name = name.toLowerCase();
+//        return doctorRepository.findByNameAndSpecialization(name, specialization);
+        return doctorRepository.findAll();
     }
 
-    public List<Doctor> getDoctors(Optional<String> name, Optional<String> specialisation) {
-        Predicate<Doctor> specialisationFilter = specialisation.map(this::filterBySpecialisation)
-                .orElse(doctor -> true);
-        Predicate<Doctor> nameFilter = name.map(this::filterByName).
-                orElse(doctor -> true);
-        Predicate<Doctor> complexFilter = specialisationFilter.and(nameFilter);
-
-        return doctorRepository.findAll().stream()
-                .filter(complexFilter)
-                .collect(Collectors.toList());
-    }
-    private Predicate<Doctor> filterBySpecialisation (String specialisation){
-        return doctor -> doctor.getSpecialization().equals(specialisation);
-    }
-    private Predicate<Doctor> filterByName(String name) {
-
-        return doctor -> doctor.getName().equals(name);
+    public List<Doctor> getDoctorsUsingSingleJpaMethods(Optional<String> name, Optional<List<String>> specialization) {
+        return doctorRepository.findByNameAndSpecialization(name.orElse(null), specialization.orElse(null));
     }
 
+    public Doctor getDoctorByID(Integer id) {
+        confirmNotExists(id);
+        return doctorRepository.findOne(id);
+    }
 
-    public Optional <Doctor> save(Doctor doctor) {
+    public List<String> getDoctorSpecializations(Integer id) {
+//        return doctorRepository.getSpecializations(id);
+//        return getDoctorByID(id).getSpecializations();
+        return config.getSpecializations();
+    }
+
+    public Doctor createDoctor(Doctor doctor) {
+        confirmAlreadyExists(doctor.getId());
         confirmSpecialization(doctor);
         return doctorRepository.save(doctor);
     }
 
-    private void confirmSpecialization(Doctor doctor) {
-        if (!config.getSpecializations().contains(doctor.getSpecialization())) {
-            throw new UnconfirmedDoctorSpecialization("Specialization " + doctor.getSpecialization() +
-            "is forbidden (use '/doctors/specializations' endpoint to check permitted list");
+    public Doctor updateDoctor(Integer id, Doctor doctor) {
+        confirmNotExists(id);
+        confirmIdNotChanged(id, doctor);
+        confirmSpecialization(doctor);
+        return doctorRepository.save(doctor);
+    }
+
+    public void update(Integer id, Doctor doctor) {
+        Doctor updDoctor = doctorRepository.getOne(id);
+        if(!(updDoctor == null)){
+            updDoctor.setName(doctor.getName());
+            updDoctor.setSpecializations(doctor.getSpecializations());
+            updDoctor.setSchedule(doctor.getSchedule());
+            doctorRepository.saveAndFlush(updDoctor);
         }
     }
 
-    public Optional<Doctor> updateDoctor(Integer id, Doctor doctor) {
-        confirmIdNotChanged(id, doctor);
-        return doctorRepository.updateDoctor(id, doctor);
+    public void deleteDoctor(Integer id) {
+        confirmNotExists(id);
+        doctorRepository.delete(id);
+    }
+
+    private void confirmSpecialization(Doctor doctor) {
+        if (!config.getSpecializations().containsAll(doctor.getSpecializations())) {
+            throw new UnconfirmedDoctorSpecializationException();
+        }
     }
 
     private void confirmIdNotChanged(Integer id, Doctor doctor) {
         if (!Objects.equals(id, doctor.getId())) {
-            throw new IdChangingIsForbidden("Existing doctor ID changing is forbidden");
+            throw new IdModificationIsForbiddenException();
         }
     }
 
-    public Optional<Doctor> delete(Integer id) {
-        return doctorRepository.delete(id);
+    private void confirmNotExists(Integer id) {
+        if (!doctorRepository.exists(id)) {
+            throw new DoctorNotFoundException();
+        }
+    }
+
+    private void confirmAlreadyExists(Integer id) {
+        if (doctorRepository.exists(id)) {
+            throw new DoctorAlreadyExistsException();
+        }
+    }
+
+    public boolean exists(Integer id) {
+       return doctorRepository.exists(id);
+    }
+
+    public Optional<Doctor> getById(Integer id) {
+        return doctorRepository.findById(id);
     }
 }
